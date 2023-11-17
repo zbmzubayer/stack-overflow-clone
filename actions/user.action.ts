@@ -1,10 +1,10 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import connectToDb from '@/db';
 import User, { IUser } from '@/db/models/user.model';
-import { revalidatePath } from 'next/cache';
 
-const create = async (payload: IUser) => {
+export const createUser = async (payload: IUser) => {
   connectToDb();
   try {
     const user = await User.create(payload);
@@ -15,7 +15,7 @@ const create = async (payload: IUser) => {
   }
 };
 
-const getById = async (clerkId: string) => {
+export const getUserById = async (clerkId: string) => {
   try {
     const user = await User.findOne({ clerkId: clerkId });
     return user;
@@ -25,7 +25,7 @@ const getById = async (clerkId: string) => {
   }
 };
 
-const update = async (clerkId: string, payload: IUser) => {
+export const updateUser = async (clerkId: string, payload: IUser) => {
   try {
     const user = await User.findOneAndUpdate({ clerkId: clerkId }, payload, { new: true });
     revalidatePath(`/profile/${user.username}`);
@@ -36,7 +36,7 @@ const update = async (clerkId: string, payload: IUser) => {
   }
 };
 
-const deleteById = async (clerkId: string) => {
+export const deleteUser = async (clerkId: string) => {
   try {
     const user = await User.findOneAndDelete({ clerkId });
     if (!user) {
@@ -48,5 +48,3 @@ const deleteById = async (clerkId: string) => {
     throw err;
   }
 };
-
-export const userAction = { create, getById, update, deleteById };

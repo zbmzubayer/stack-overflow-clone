@@ -1,8 +1,8 @@
 import { Webhook } from 'svix';
 import { headers } from 'next/headers';
 import { WebhookEvent } from '@clerk/nextjs/server';
-import { userAction } from '@/actions/user.action';
 import { NextResponse } from 'next/server';
+import { createUser, deleteUser, updateUser } from '@/actions/user.action';
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
@@ -64,7 +64,7 @@ export async function POST(req: Request) {
       email: email_addresses[0].email_address,
       picture: image_url,
     };
-    const mongoUser = await userAction.create(payload);
+    const mongoUser = await createUser(payload);
     return NextResponse.json({ message: 'OK', user: mongoUser });
   }
   if (eventType === 'user.updated') {
@@ -76,12 +76,12 @@ export async function POST(req: Request) {
       email: email_addresses[0].email_address,
       picture: image_url,
     };
-    const mongoUser = await userAction.update(id, payload);
+    const mongoUser = await updateUser(id, payload);
     return NextResponse.json({ message: 'OK', user: mongoUser });
   }
   if (eventType === 'user.deleted') {
     const { id } = evt.data;
-    const mongoUser = await userAction.deleteById(id!);
+    const mongoUser = await deleteUser(id!);
     return NextResponse.json({ message: 'OK', user: mongoUser });
   }
 
