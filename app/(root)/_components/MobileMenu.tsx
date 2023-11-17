@@ -6,7 +6,7 @@ import { MenuIcon, Route } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { SignedOut } from '@clerk/nextjs';
 import Logo from './Logo';
-import { sidebarLinks } from '@/constants/constants';
+import { sidebarLinks } from '@/constants/navigation';
 import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { sidebarLinks } from '@/constants/constants';
+import { sidebarLinks } from '@/constants/navigation';
 import { SignedOut } from '@clerk/nextjs';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
