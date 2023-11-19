@@ -17,7 +17,7 @@ body {
     @apply flex items-center justify-start;
   }
   .card-wrapper {
-    @apply dark:dark-gradient dar bg-light-900 shadow-light-100;
+    @apply dark:dark-gradient bg-light-800 shadow-light-100;
   }
   .btn {
     @apply bg-light-800 dark:bg-dark-300 !important;
