@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import connectToDb from '@/db';
 import User, { IUser } from '@/db/models/user.model';
+import Question from '@/db/models/question.model';
 
 export const createUser = async (payload: IUser) => {
   connectToDb();
@@ -27,7 +28,7 @@ export const getUserById = async (clerkId: string) => {
 
 export const updateUser = async (clerkId: string, payload: IUser) => {
   try {
-    const user = await User.findOneAndUpdate({ clerkId: clerkId }, payload, { new: true });
+    const user = await User.findOneAndUpdate({ clerkId }, payload, { new: true });
     revalidatePath(`/profile/${user.username}`);
     return user;
   } catch (err) {
@@ -42,6 +43,10 @@ export const deleteUser = async (clerkId: string) => {
     if (!user) {
       throw new Error('User not found');
     }
+    const userQuestionIds = await Question.find({ author: user._id }).distinct('_id');
+    await Question.deleteMany({ author: user._id });
+    // Todo: delete user's answers
+
     return user;
   } catch (err) {
     console.log('Failed to delete user', err);

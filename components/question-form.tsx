@@ -18,23 +18,28 @@ import {
 } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useRouter } from 'next/navigation';
+import { getUserById } from '@/actions/user.action';
+import { createQuestion } from '@/actions/question.action';
+import { TagBadge } from './tags-badge';
 
 const formSchema = z.object({
-  title: z.string().min(5).max(120),
-  explanation: z.string().min(20),
-  tags: z.array(z.string().min(1).max(15)).min(1).max(3),
+  title: z.string().trim().min(1, { message: 'Required' }).min(5).max(120),
+  content: z.string().min(20),
+  tags: z.array(z.string().trim().min(1).max(15)).min(1, { message: 'Required' }).max(3),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function QuestionForm() {
+export default function QuestionForm({ userId }: { userId: string }) {
   const editorRef = useRef(null);
+  const router = useRouter();
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, field: any) => {
     if (e.key === 'Enter' && field.name === 'tags') {
       e.preventDefault();
       const tagInput = e.target as HTMLInputElement;
-      const tagValue = tagInput.value.trim();
+      const tagValue = tagInput.value.trim().toLocaleLowerCase(); // trim for removing spaces and toLowerCase for consistency
       if (tagValue.length > 15) {
         form.setError('tags', {
           type: 'required',
@@ -60,13 +65,21 @@ export default function QuestionForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: '',
-      explanation: '',
+      content: '',
       tags: [],
     },
   });
 
-  function onSubmit(values: FormValues) {
+  async function onSubmit(values: FormValues) {
     console.log(values);
+    try {
+      const getMongoUser = await getUserById(userId!);
+      const payload = { ...values, author: getMongoUser._id };
+      await createQuestion(payload);
+      router.push('/');
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (
@@ -92,7 +105,7 @@ export default function QuestionForm() {
         />
         <FormField
           control={form.control}
-          name="explanation"
+          name="content"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="paragraph-semibold text-dark400_light800">
@@ -103,6 +116,8 @@ export default function QuestionForm() {
                   apiKey={envConfig.TINY_API_KEY}
                   // @ts-ignore
                   onInit={(evt, editor) => (editorRef.current = editor)}
+                  onBlur={field.onBlur}
+                  onEditorChange={(content) => field.onChange(content)}
                   init={{
                     height: 350,
                     menubar: false,
@@ -157,17 +172,14 @@ export default function QuestionForm() {
                   {field.value.length > 0 && (
                     <div className="mt-2.5 flex items-center gap-2.5">
                       {field.value.map((tag: string) => (
-                        <div
-                          key={tag}
-                          className="background-light800_dark300 flex items-center gap-2 rounded-md px-2 py-1 text-sm capitalize"
-                        >
+                        <TagBadge key={tag} size="sm">
                           {tag}
                           <XIcon
                             className="h-3.5 w-3.5"
                             role="button"
                             onClick={() => handleTagRemove(tag, field)}
                           />
-                        </div>
+                        </TagBadge>
                       ))}
                     </div>
                   )}
@@ -181,7 +193,7 @@ export default function QuestionForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="primary-gradient ">
+        <Button type="submit" className="primary-gradient px-10 text-light-800">
           Submit
         </Button>
       </form>

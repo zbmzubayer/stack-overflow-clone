@@ -5,11 +5,15 @@ import HomeFilter from './_components/home-filter';
 import { HomePageFilters } from '@/constants/filters';
 import { questionNoResult } from '@/constants/no-result';
 import LocalSearch from '@/components/local-search';
+import QuestionCard from '@/components/question-card';
 import NoResult from '@/components/no-result';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
+import { getAllQuestions } from '@/actions/question.action';
 
-export default function Home() {
+export default async function Home() {
+  // const questions = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const questions = await getAllQuestions({});
   return (
     <>
       <div className="flex w-full items-center justify-between">
@@ -29,14 +33,17 @@ export default function Home() {
         <Filter filters={HomePageFilters} containerClass="sm:min-w-[170px] md:hidden" />
       </div>
       <HomeFilter />
-      <div className="mt-10 flex flex-col ">
-        {}
-        <NoResult
-          title={questionNoResult.title}
-          description={questionNoResult.description}
-          buttonText={questionNoResult.buttonText}
-          buttonLink={questionNoResult.buttonLink}
-        />
+      <div className="mt-10 flex flex-col gap-5">
+        {questions.length > 0 ? (
+          questions.map((question) => <QuestionCard key={question._id} question={question} />)
+        ) : (
+          <NoResult
+            title={questionNoResult.title}
+            description={questionNoResult.description}
+            buttonText={questionNoResult.buttonText}
+            buttonLink={questionNoResult.buttonLink}
+          />
+        )}
       </div>
     </>
   );
