@@ -60,7 +60,7 @@ export async function POST(req: Request) {
     const { id, first_name, last_name, username, email_addresses, image_url } = evt.data;
     const payload = {
       clerkId: id,
-      name: `${first_name}${last_name ? last_name : ''}`,
+      name: `${first_name} ${last_name}`,
       username: username!,
       email: email_addresses[0].email_address,
       picture: image_url,
@@ -72,7 +72,7 @@ export async function POST(req: Request) {
     const { id, first_name, last_name, username, email_addresses, image_url } = evt.data;
     const payload = {
       clerkId: id,
-      name: `${first_name}${last_name ? last_name : ''}`,
+      name: `${first_name} ${last_name}`,
       username: username!,
       email: email_addresses[0].email_address,
       picture: image_url,
