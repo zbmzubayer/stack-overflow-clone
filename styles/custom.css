@@ -38,7 +38,7 @@ body {
     background: linear-gradient(232deg, rgba(23, 28, 35, 0.41) 0%, rgba(19, 22, 28, 0.7) 100%);
   }
   .tab {
-    @apply text-light-5 min-h-full bg-light-800 dark:bg-dark-400;
+    @apply min-h-full text-brand-500 dark:bg-dark-400;
   }
   .no-focus {
     @apply focus-visible:ring-0 focus-visible:ring-transparent !important;
