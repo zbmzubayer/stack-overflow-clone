@@ -1,4 +1,4 @@
-export default function getFormatNumber(number: number): string {
+export default function getFormatNumber(number: number) {
   if (number >= 1e9) {
     return (number / 1e9).toFixed(1) + 'B';
   }
