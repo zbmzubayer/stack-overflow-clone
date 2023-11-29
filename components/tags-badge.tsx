@@ -9,8 +9,7 @@ const tagVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          'background-light900_dark300 text-light400_light500 hover:background-light800_dark300/90',
+        default: 'background-light900_dark300 text-light400_light500',
         destructive: 'bg-destructive hover:bg-destructive/90',
         outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
         secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',

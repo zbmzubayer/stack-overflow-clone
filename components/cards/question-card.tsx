@@ -1,25 +1,16 @@
-import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import { tagVariants } from './tags-badge';
-import { Eye, MessageCircle, ThumbsUp } from 'lucide-react';
 import Image from 'next/image';
+import { Eye, MessageCircle, ThumbsUp } from 'lucide-react';
+import { tagVariants } from '../tags-badge';
 import getTimeStamp from '@/utils/getTimeStamp';
 import getFormatNumber from '@/utils/getFormatNumber';
+import { cn } from '@/lib/utils';
+import { SignedIn } from '@clerk/nextjs';
+import EditDeleteAction from '../edit-delete-action';
 
-interface QuestionCardProps {
-  _id: string;
-  title: string;
-  tags: { _id: string; name: string }[];
-  views: number;
-  upvotes: number;
-  downvotes: number;
-  author: { id: string; name: string; avatar: string };
-  answers: Array<object>;
-  createdAt: Date;
-}
-
-export default function QuestionCard({ question }: { question: any }) {
-  const { title, tags, views, upvotes, downvotes, author, answers, createdAt } = question;
+export default function QuestionCard({ question, clerkId }: { question: any; clerkId: string }) {
+  const { id, title, tags, views, upvotes, author, answers, createdAt } = question;
+  const showActionButtons = clerkId && clerkId === author.clerkId;
 
   return (
     <div className="card-wrapper rounded-lg p-9 sm:px-11">
@@ -27,18 +18,23 @@ export default function QuestionCard({ question }: { question: any }) {
         <p className="subtle-regular text-dark400_light700 lg:hidden">
           {getTimeStamp(createdAt)} ago
         </p>
-        <Link href={`/question/${question._id}`}>
-          <h3 className="h3-semibold text-dark200_light900 line-clamp-1">{title}</h3>
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link href={`/question/${question._id}`}>
+            <h3 className="h3-semibold text-dark200_light900 line-clamp-1">{title}</h3>
+          </Link>
+          <SignedIn>
+            {showActionButtons && <EditDeleteAction type="Question" itemId={id} />}
+          </SignedIn>
+        </div>
       </div>
       <div className="mt-2 flex gap-3">
         {tags.map((tag: any) => (
-          <Link href={`/tag/${tag._id}`} key={tag._id} className={cn(tagVariants({ size: 'sm' }))}>
+          <Link href={`/tags/${tag._id}`} key={tag._id} className={cn(tagVariants({ size: 'sm' }))}>
             {tag.name}
           </Link>
         ))}
       </div>
-      <div className="">
+      <div>
         <hr className="mt-2" />
         <div className="small-medium mt-2 flex justify-between gap-3 text-slate-400 max-md:flex-col">
           <div className="flex items-center gap-1">
@@ -58,19 +54,20 @@ export default function QuestionCard({ question }: { question: any }) {
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1">
-              <ThumbsUp className="h-3.5 w-3.5 stroke-blue-500 hover:scale-105" />
+              <ThumbsUp className="h-3.5 w-3.5 stroke-blue-500" />
               {getFormatNumber(upvotes.length)} {upvotes.length > 1 ? 'Votes' : 'Vote'}
             </div>
             <div className="flex items-center gap-1">
-              <MessageCircle className="h-3.5 w-3.5 stroke-foreground hover:scale-105" />
+              <MessageCircle className="h-3.5 w-3.5 stroke-foreground" />
               {getFormatNumber(answers.length)} {answers.length > 1 ? 'Answers' : 'Answer'}
             </div>
             <div className="flex items-center gap-1">
-              <Eye className="h-3.5 w-3.5 stroke-slate-500 hover:scale-105" />
+              <Eye className="h-3.5 w-3.5 stroke-slate-500" />
               {getFormatNumber(views)} {views > 1 ? 'Views' : 'View'}
             </div>
           </div>
         </div>
+        <hr className="mt-2" />
       </div>
     </div>
   );

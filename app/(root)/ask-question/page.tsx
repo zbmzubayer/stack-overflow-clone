@@ -1,4 +1,4 @@
-import QuestionForm from '@/components/question-form';
+import QuestionForm from '@/components/forms/question-form';
 import { auth } from '@clerk/nextjs';
 
 export default function AskQuestionPage() {

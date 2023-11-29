@@ -4,13 +4,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { sidebarLinks } from '@/constants/navigation';
-import { SignedOut } from '@clerk/nextjs';
+import { SignedOut, useUser } from '@clerk/nextjs';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
 import { UserCircle, UserPlus } from 'lucide-react';
 
 export default function LeftSidebar() {
   const pathname = usePathname();
+  const { user } = useUser();
 
   return (
     <aside className="background-light900_dark200 light-border sticky left-0 top-20 flex h-[calc(100vh-5rem)] flex-col border-r p-5 shadow-light-300 dark:shadow-none max-sm:hidden lg:w-[250px]">
@@ -18,6 +19,13 @@ export default function LeftSidebar() {
         <div className="flex flex-col gap-1">
           {sidebarLinks.map((item) => {
             const isActive = pathname === item.route;
+            if (item.route === '/profile') {
+              if (user?.username) {
+                item.route = `/profile/${user.username}`;
+              } else {
+                return null;
+              }
+            }
             return (
               <Link
                 key={item.route}

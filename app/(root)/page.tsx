@@ -1,18 +1,20 @@
 import Link from 'next/link';
 import { SearchIcon } from 'lucide-react';
-import Filter from './_components/filter';
+import Filter from '../../components/filter';
 import HomeFilter from './_components/home-filter';
 import { HomePageFilters } from '@/constants/filters';
 import { questionNoResult } from '@/constants/no-result';
 import LocalSearch from '@/components/local-search';
-import QuestionCard from '@/components/question-card';
+import QuestionCard from '@/components/cards/question-card';
 import NoResult from '@/components/no-result';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
 import { getAllQuestions } from '@/actions/question.action';
+import { auth } from '@clerk/nextjs';
 
 export default async function Home() {
   // const questions = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const { userId } = auth();
   const questions = await getAllQuestions({});
   return (
     <>
@@ -35,7 +37,9 @@ export default async function Home() {
       <HomeFilter />
       <div className="mt-10 flex flex-col gap-5">
         {questions.length > 0 ? (
-          questions.map((question) => <QuestionCard key={question._id} question={question} />)
+          questions.map((question) => (
+            <QuestionCard key={question._id} question={question} clerkId={userId!} />
+          ))
         ) : (
           <NoResult
             title={questionNoResult.title}

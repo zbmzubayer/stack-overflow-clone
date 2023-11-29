@@ -1,9 +1,10 @@
 'use server';
 
+import Answer from '@/db/models/answer.model';
 import Question, { IQuestion } from '@/db/models/question.model';
 import Tag from '@/db/models/tag.model';
 import User from '@/db/models/user.model';
-import { QuestionVoteParams } from '@/types/action';
+import { DeleteQuestionParams, QuestionVoteParams } from '@/types/action';
 import { revalidatePath } from 'next/cache';
 
 export const createQuestion = async (payload: any) => {
@@ -97,6 +98,22 @@ export const downvoteQuestion = async (params: QuestionVoteParams) => {
     if (!question) throw new Error('Question not found');
     revalidatePath(path);
     // Increment user's reputation by 10 for upvoting a question
+    return question;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const updateQuestion = async (id: string, payload: any) => {};
+
+export const deleteQuestion = async (params: DeleteQuestionParams) => {
+  try {
+    const { questionId, path } = params;
+    const question = await Question.findByIdAndDelete({ _id: questionId });
+    if (!question) throw new Error('Question not found');
+    await Answer.deleteMany({ question: questionId });
+    revalidatePath(path);
     return question;
   } catch (error) {
     console.log(error);

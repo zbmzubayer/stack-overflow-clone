@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -21,7 +21,7 @@ import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
 import { getUserById } from '@/actions/user.action';
 import { createQuestion } from '@/actions/question.action';
-import { TagBadge } from './tags-badge';
+import { TagBadge } from '../tags-badge';
 
 const formSchema = z.object({
   title: z.string().trim().min(1, { message: 'Required' }).min(5).max(120),
