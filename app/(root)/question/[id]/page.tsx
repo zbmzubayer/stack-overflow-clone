@@ -18,8 +18,9 @@ export default async function QuestionDetailPage({ params }: { params: { id: str
   const { userId } = auth();
   const mongoUser = await getUserById(userId!);
   // warning: mongodb objectId can not be passed as props from server component to client component
-  const mongoUserId = mongoUser._id.toString();
-  const questionId = question._id.toString();
+  const mongoUserId = mongoUser?.id;
+  const questionId = question?.id;
+
   return (
     <>
       <div>
@@ -42,7 +43,7 @@ export default async function QuestionDetailPage({ params }: { params: { id: str
             hasUpvoted={question.upvotes.includes(mongoUserId)}
             downvotes={downvotes.length}
             hasDownvoted={question.downvotes.includes(mongoUserId)}
-            hasSaved={mongoUser.savedQuestions.includes(questionId)}
+            hasSaved={mongoUser?.savedQuestions.includes(questionId)}
           />
         </div>
         <h2 className="h2-semibold text-dark200_light900 mt-3.5">{title}</h2>
