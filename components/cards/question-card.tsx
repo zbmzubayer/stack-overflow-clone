@@ -1,14 +1,19 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Eye, MessageCircle, ThumbsUp } from 'lucide-react';
+import { SignedIn } from '@clerk/nextjs';
 import { tagVariants } from '../tags-badge';
 import getTimeStamp from '@/utils/getTimeStamp';
 import getFormatNumber from '@/utils/getFormatNumber';
 import { cn } from '@/lib/utils';
-import { SignedIn } from '@clerk/nextjs';
 import EditDeleteAction from '../edit-delete-action';
 
-export default function QuestionCard({ question, clerkId }: { question: any; clerkId: string }) {
+interface Props {
+  question: any;
+  clerkId?: string | null;
+}
+
+export default function QuestionCard({ question, clerkId }: Props) {
   const { id, title, tags, views, upvotes, author, answers, createdAt } = question;
   const showActionButtons = clerkId && clerkId === author.clerkId;
 

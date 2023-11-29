@@ -28,7 +28,7 @@ export default async function Home() {
       <div className="mt-10 flex flex-col gap-5">
         {savedQuestions.length > 0 ? (
           savedQuestions.map((question: any) => (
-            <QuestionCard key={question._id} question={question} />
+            <QuestionCard key={question._id} question={question} clerkId={userId} />
           ))
         ) : (
           <NoResult
