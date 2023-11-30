@@ -138,3 +138,13 @@ export const deleteQuestion = async (params: DeleteQuestionParams) => {
     throw error;
   }
 };
+
+export const getTopQuestions = async () => {
+  try {
+    const topQuestions = await Question.find({}).sort({ views: -1, upvotes: -1 }).limit(5);
+    return topQuestions;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
