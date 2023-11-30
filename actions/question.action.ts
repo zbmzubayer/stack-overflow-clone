@@ -1,10 +1,11 @@
 'use server';
 
 import Answer from '@/db/models/answer.model';
+import Interaction from '@/db/models/interaction.model';
 import Question, { IQuestion } from '@/db/models/question.model';
 import Tag from '@/db/models/tag.model';
 import User from '@/db/models/user.model';
-import { DeleteQuestionParams, QuestionVoteParams } from '@/types/action';
+import { DeleteQuestionParams, EditQuestionParams, QuestionVoteParams } from '@/types/action';
 import { revalidatePath } from 'next/cache';
 
 export const createQuestion = async (payload: any) => {
@@ -105,7 +106,22 @@ export const downvoteQuestion = async (params: QuestionVoteParams) => {
   }
 };
 
-export const updateQuestion = async (id: string, payload: any) => {};
+export const updateQuestion = async (params: EditQuestionParams) => {
+  try {
+    const { questionId, title, content, path } = params;
+    const question = await Question.findByIdAndUpdate(
+      { _id: questionId },
+      { title, content },
+      { new: true },
+    );
+    if (!question) throw new Error('Question not found');
+    revalidatePath(path);
+    return question;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 
 export const deleteQuestion = async (params: DeleteQuestionParams) => {
   try {
@@ -113,6 +129,8 @@ export const deleteQuestion = async (params: DeleteQuestionParams) => {
     const question = await Question.findByIdAndDelete({ _id: questionId });
     if (!question) throw new Error('Question not found');
     await Answer.deleteMany({ question: questionId });
+    await Tag.updateMany({ questions: questionId }, { $pull: { questions: questionId } });
+    await Interaction.deleteMany({ question: questionId });
     revalidatePath(path);
     return question;
   } catch (error) {

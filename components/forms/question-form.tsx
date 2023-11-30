@@ -1,10 +1,10 @@
 'use client';
 
-import { useRef } from 'react';
+import { useState, useRef } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { XIcon } from 'lucide-react';
+import { Loader2Icon, XIcon } from 'lucide-react';
 import { Editor } from '@tinymce/tinymce-react';
 import envConfig from '@/config';
 import {
@@ -18,9 +18,9 @@ import {
 } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { getUserById } from '@/actions/user.action';
-import { createQuestion } from '@/actions/question.action';
+import { createQuestion, updateQuestion } from '@/actions/question.action';
 import { TagBadge } from '../tags-badge';
 
 const formSchema = z.object({
@@ -31,9 +31,20 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function QuestionForm({ userId }: { userId: string }) {
+interface Props {
+  type: 'Create' | 'Edit';
+  userId: string;
+  questionDetails?: string;
+}
+
+export default function QuestionForm({ userId, type, questionDetails }: Props) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const editorRef = useRef(null);
   const router = useRouter();
+  const pathname = usePathname();
+
+  const parsedQuestionDetails = JSON.parse(questionDetails || '{}');
+  const questionTags = parsedQuestionDetails?.tags?.map((tag: any) => tag.name);
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, field: any) => {
     if (e.key === 'Enter' && field.name === 'tags') {
@@ -64,21 +75,33 @@ export default function QuestionForm({ userId }: { userId: string }) {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: '',
-      content: '',
-      tags: [],
+      title: parsedQuestionDetails.title || '',
+      content: parsedQuestionDetails.content || '',
+      tags: questionTags || [],
     },
   });
 
   async function onSubmit(values: FormValues) {
-    console.log(values);
+    setIsSubmitting(true);
     try {
       const getMongoUser = await getUserById(userId!);
-      const payload = { ...values, author: getMongoUser._id };
-      await createQuestion(payload);
-      router.push('/');
+      if (type === 'Create') {
+        const payload = { ...values, author: getMongoUser._id };
+        await createQuestion(payload);
+        router.push('/');
+      } else if (type === 'Edit') {
+        await updateQuestion({
+          questionId: parsedQuestionDetails._id,
+          title: values.title,
+          content: values.content,
+          path: pathname,
+        });
+        router.push(`/question/${parsedQuestionDetails._id}`);
+      }
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -94,7 +117,7 @@ export default function QuestionForm({ userId }: { userId: string }) {
                 Question Title <span className="text-brand-500">*</span>
               </FormLabel>
               <FormControl>
-                <Input className="no-focus paragraph-regular light-border-2 border" {...field} />
+                <Input className="paragraph-regular light-border-2" {...field} />
               </FormControl>
               <FormDescription>
                 Be specific and imagine you&apos;re asking a question to another person
@@ -118,6 +141,7 @@ export default function QuestionForm({ userId }: { userId: string }) {
                   onInit={(evt, editor) => (editorRef.current = editor)}
                   onBlur={field.onBlur}
                   onEditorChange={(content) => field.onChange(content)}
+                  initialValue={parsedQuestionDetails.content || ''}
                   init={{
                     height: 350,
                     menubar: false,
@@ -166,7 +190,8 @@ export default function QuestionForm({ userId }: { userId: string }) {
                 <>
                   <Input
                     placeholder="Add tags..."
-                    className="no-focus paragraph-regular light-border-2 border"
+                    disabled={type === 'Edit'}
+                    className="paragraph-regular light-border-2 border"
                     onKeyDown={(e) => handleInputKeyDown(e, field)}
                   />
                   {field.value.length > 0 && (
@@ -174,11 +199,13 @@ export default function QuestionForm({ userId }: { userId: string }) {
                       {field.value.map((tag: string) => (
                         <TagBadge key={tag} size="sm">
                           {tag}
-                          <XIcon
-                            className="h-3.5 w-3.5"
-                            role="button"
-                            onClick={() => handleTagRemove(tag, field)}
-                          />
+                          {type === 'Create' && (
+                            <XIcon
+                              className="h-3.5 w-3.5"
+                              role="button"
+                              onClick={() => handleTagRemove(tag, field)}
+                            />
+                          )}
                         </TagBadge>
                       ))}
                     </div>
@@ -193,8 +220,19 @@ export default function QuestionForm({ userId }: { userId: string }) {
             </FormItem>
           )}
         />
-        <Button type="submit" className="primary-gradient px-10 text-light-800">
-          Submit
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="primary-gradient px-10 text-light-800"
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+              {type === 'Create' ? 'Posting...' : 'Updating...'}
+            </>
+          ) : (
+            <>{type === 'Create' ? 'Post Question' : 'Save Changes'}</>
+          )}
         </Button>
       </form>
     </Form>

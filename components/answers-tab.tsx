@@ -9,11 +9,11 @@ interface Props {
 export default async function AnswerTabs({ searchParams, userId }: Props) {
   const result = await getUserAnswers({ userId, page: 1 });
   const { totalAnswers, userAnswers } = result;
-  console.log(userAnswers);
+
   return (
-    <div>
+    <div className="space-y-5">
       {userAnswers.map((answer) => (
-        <AnswerCard key={answer._id} answer={answer} />
+        <AnswerCard key={answer._id} answer={answer} clerkId={answer.author.clerkId} />
       ))}
     </div>
   );

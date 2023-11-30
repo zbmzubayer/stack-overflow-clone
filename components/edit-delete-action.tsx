@@ -1,6 +1,9 @@
 'use client';
 
+import { usePathname, useRouter } from 'next/navigation';
 import { FileEditIcon, TrashIcon } from 'lucide-react';
+import { deleteQuestion } from '@/actions/question.action';
+import { deleteAnswer } from '@/actions/answer.action';
 
 interface Props {
   type: 'Question' | 'Answer';
@@ -8,14 +11,23 @@ interface Props {
 }
 
 export default function EditDeleteAction({ type, itemId }: Props) {
-  const handleEdit = () => {};
-  const handleDelete = () => {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const handleEdit = () => {
+    router.push(`/question/edit/${itemId}`);
+  };
+
+  const handleDelete = async () => {
     if (type === 'Question') {
       // delete question
+      await deleteQuestion({ questionId: itemId, path: pathname });
     } else if (type === 'Answer') {
       // delete answer
+      await deleteAnswer({ answerId: itemId, path: pathname });
     }
   };
+
   return (
     <div className="flex items-center gap-3">
       {type === 'Question' && (

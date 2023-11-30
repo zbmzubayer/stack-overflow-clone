@@ -1,5 +1,5 @@
-import QuestionForm from '@/components/forms/question-form';
 import { auth } from '@clerk/nextjs';
+import QuestionForm from '@/components/forms/question-form';
 
 export default function AskQuestionPage() {
   const { userId } = auth();
@@ -7,7 +7,7 @@ export default function AskQuestionPage() {
     <div>
       <h1 className="h1-bold text-dark100_light900">Ask a question</h1>
       <div className="mt-9">
-        <QuestionForm userId={userId!} />
+        <QuestionForm type="Create" userId={userId!} />
       </div>
     </div>
   );

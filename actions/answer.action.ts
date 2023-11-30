@@ -1,8 +1,14 @@
 'use server';
 
 import Answer, { IAnswer } from '@/db/models/answer.model';
+import Interaction from '@/db/models/interaction.model';
 import Question from '@/db/models/question.model';
-import { AnswerVoteParams, CreateAnswerParams, GetAnswersParams } from '@/types/action';
+import {
+  AnswerVoteParams,
+  CreateAnswerParams,
+  DeleteAnswerParams,
+  GetAnswersParams,
+} from '@/types/action';
 import { revalidatePath } from 'next/cache';
 
 export const createAnswer = async (params: CreateAnswerParams) => {
@@ -70,6 +76,21 @@ export const downvoteAnswer = async (params: AnswerVoteParams) => {
     if (!answer) throw new Error('Answer not found');
     revalidatePath(path);
     // Increment user's reputation by 10 for upvoting a answer
+    return answer;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const deleteAnswer = async (params: DeleteAnswerParams) => {
+  try {
+    const { answerId, path } = params;
+    const answer = await Answer.findByIdAndDelete({ _id: answerId });
+    if (!answer) throw new Error('Answer not found');
+    await Question.updateMany({ _id: answer.question }, { $pull: { answers: answerId } });
+    await Interaction.deleteMany({ answer: answerId });
+    revalidatePath(path);
     return answer;
   } catch (error) {
     console.log(error);

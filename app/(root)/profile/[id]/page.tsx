@@ -60,8 +60,8 @@ export default async function Profile({ params, searchParams }: Props) {
       </div>
       <Stats totalQuestions={totalQuestions} totalAnswers={totalAnswers} />
       <div>
-        <Tabs defaultValue="top-posts">
-          <TabsList>
+        <Tabs defaultValue="top-posts" className="mt-10">
+          <TabsList className="mb-2">
             <TabsTrigger
               value="top-posts"
               className="data-[state=active]:bg-orange-100 data-[state=active]:text-orange-500"
