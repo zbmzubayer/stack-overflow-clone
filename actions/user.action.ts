@@ -46,7 +46,7 @@ export const getUserById = async (clerkId: string) => {
   }
 };
 
-export const updateUser = async (clerkId: string, payload: IUser) => {
+export const updateUser = async (clerkId: string, payload: any) => {
   try {
     const user = await User.findOneAndUpdate({ clerkId }, payload, { new: true });
     revalidatePath(`/profile/${user.username}`);

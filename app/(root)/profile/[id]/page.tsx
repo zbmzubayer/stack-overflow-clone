@@ -9,6 +9,7 @@ import Stats from '@/components/stats';
 import QuestionsTab from '@/components/questions-tab';
 import { cn } from '@/lib/utils';
 import AnswerTabs from '@/components/answers-tab';
+import { Calendar, CalendarDaysIcon, LinkIcon, MapPinIcon } from 'lucide-react';
 
 interface Props {
   params: { id: string };
@@ -35,11 +36,27 @@ export default async function Profile({ params, searchParams }: Props) {
             <p className="font-medium text-slate-600 dark:text-slate-400">@{user.username}</p>
           </div>
 
-          <div className="mt-5">
-            {user.location && <div>location</div>}
-            Joined {getJoinedDate(user.createdAt)}
+          <div className="mt-5 flex items-center gap-5">
+            {user.location && (
+              <div>
+                <a href={user?.portfolio} className="flex items-center">
+                  <LinkIcon className="mr-2 h-4 w-4 text-gray-500" />
+                  <span className="text-accent-blue">Portfolio</span>
+                </a>
+              </div>
+            )}
+            {user.location && (
+              <div className="flex items-center">
+                <MapPinIcon className="mr-2 h-4 w-4 text-gray-500" />
+                {user?.location}
+              </div>
+            )}
+            <div className="flex items-center">
+              <CalendarDaysIcon className="mr-2 h-4 w-4 text-gray-500" /> Joined{' '}
+              {getJoinedDate(user.createdAt)}
+            </div>
           </div>
-          {user.bio && <p className="paragraph-regular text-dark400_light800 mt-8">bio</p>}
+          {user.bio && <p className="paragraph-regular text-dark400_light800 mt-8">{user?.bio}</p>}
         </div>
 
         <div>
@@ -49,7 +66,7 @@ export default async function Profile({ params, searchParams }: Props) {
                 href="/profile/edit"
                 className={cn(
                   buttonVariants({ variant: 'outline' }),
-                  'paragraph-medium text-dark300_light700 border-2 transition-all hover:border-orange-500 hover:bg-orange-50 hover:text-orange-500 sm:w-[200px]',
+                  'paragraph-medium text-dark300_light700 border-2 transition-all hover:text-orange-500 sm:w-[200px]',
                 )}
               >
                 Edit profile
