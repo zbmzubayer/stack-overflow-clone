@@ -105,9 +105,9 @@ export const toggleSaveQuestion = async (params: ToggleSaveQuestionParams) => {
 
 export const getSavedQuestions = async (params: GetSavedQuestionsParams) => {
   try {
-    const { clerkId, page = 1, pageSize = 10, filter, searchQuery } = params;
+    const { clerkId, searchQuery } = params;
     const query: FilterQuery<typeof Question> = searchQuery
-      ? { $regex: new RegExp(searchQuery, 'i') }
+      ? { title: { $regex: new RegExp(searchQuery, 'i') } }
       : {};
     const user = await User.findOne({ clerkId }).populate({
       path: 'savedQuestions',

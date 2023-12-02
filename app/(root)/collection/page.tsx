@@ -1,26 +1,26 @@
 import { SearchIcon } from 'lucide-react';
-import Filter from '@/components/filter';
+import { auth } from '@clerk/nextjs';
 import { QuestionFilters } from '@/constants/filters';
 import { savedQuestionNoResult } from '@/constants/no-result';
-import LocalSearch from '@/components/local-search';
-import QuestionCard from '@/components/cards/question-card';
-import NoResult from '@/components/no-result';
 import { getSavedQuestions } from '@/actions/user.action';
-import { auth } from '@clerk/nextjs';
+import LocalSearch from '@/components/local-search';
+import Filter from '@/components/filter';
+import NoResult from '@/components/no-result';
+import QuestionCard from '@/components/cards/question-card';
 
-export default async function Home() {
+export default async function CollectionPage({ searchParams }: { searchParams: { q: string } }) {
   const { userId } = auth();
-  const savedQuestions = await getSavedQuestions({ clerkId: userId! });
+  const savedQuestions = await getSavedQuestions({ clerkId: userId!, searchQuery: searchParams.q });
 
   return (
     <>
       <h1 className="h1-bold">Saved Questions</h1>
       <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <LocalSearch
-          route="/"
+          route="/collection"
           icon={<SearchIcon />}
           iconPosition="left"
-          placeholder="Search for questions"
+          placeholder="Search in saved questions"
           className="flex-1"
         />
         <Filter filters={QuestionFilters} />
