@@ -1,16 +1,17 @@
 import Link from 'next/link';
 import { SearchIcon } from 'lucide-react';
-import Filter from '../../../components/filter';
 import { UserFilters } from '@/constants/filters';
-import LocalSearch from '@/components/local-search';
-import NoResult from '@/components/no-result';
 import { tagNoResult } from '@/constants/no-result';
 import { getAllTags } from '@/actions/tag.action';
-import { cn } from '@/lib/utils';
+import LocalSearch from '@/components/local-search';
+import Filter from '@/components/filter';
+import NoResult from '@/components/no-result';
 import { tagVariants } from '@/components/tags-badge';
+import { cn } from '@/lib/utils';
 
-export default async function TagsPage() {
-  const tags = await getAllTags({});
+export default async function TagsPage({ searchParams }: { searchParams: { q: string } }) {
+  const tags = await getAllTags({ searchQuery: searchParams.q });
+
   return (
     <>
       <h1 className="h1-bold">All Tags</h1>

@@ -12,7 +12,12 @@ import {
 
 export const getAllTags = async (params: GetAllTagsParams) => {
   try {
-    const tags = await Tag.find({});
+    const { searchQuery } = params;
+    const query: FilterQuery<typeof Tag> = {};
+    if (searchQuery) {
+      query.$or = [{ name: { $regex: new RegExp(searchQuery, 'i') } }];
+    }
+    const tags = await Tag.find(query);
     return tags;
   } catch (error) {
     console.log(error);

@@ -1,9 +1,9 @@
 import { SearchIcon } from 'lucide-react';
+import { tagQuestionNoResult } from '@/constants/no-result';
 import { getQuestionsByTagId } from '@/actions/tag.action';
-import QuestionCard from '@/components/cards/question-card';
 import LocalSearch from '@/components/local-search';
 import NoResult from '@/components/no-result';
-import { tagQuestionNoResult } from '@/constants/no-result';
+import QuestionCard from '@/components/cards/question-card';
 
 interface Props {
   params: { id: string };
@@ -19,7 +19,7 @@ export default async function TagDetailsPage({ params, searchParams }: Props) {
       <h1 className="h1-bold uppercase">{tagName}</h1>
       <div className="mt-11">
         <LocalSearch
-          route="/"
+          route={`/tags/${params.id}`}
           icon={<SearchIcon />}
           iconPosition="left"
           placeholder="Search tag questions"
