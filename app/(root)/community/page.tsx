@@ -6,8 +6,8 @@ import { getAllUsers } from '@/actions/user.action';
 import LocalSearch from '@/components/local-search';
 import UserCard from '@/components/cards/user-card';
 
-export default async function CommunityPage() {
-  const users = await getAllUsers({});
+export default async function CommunityPage({ searchParams }: { searchParams: { q: string } }) {
+  const users = await getAllUsers({ searchQuery: searchParams.q });
 
   return (
     <>
