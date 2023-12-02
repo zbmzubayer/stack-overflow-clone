@@ -7,7 +7,7 @@ export default async function UserCard({ user }: any) {
   const interactedTags = await getTopInteractedTags({ userId: user._id });
   return (
     <Link
-      href={user.username}
+      href={`/profile/${user.username}`}
       className="overflow-hidden rounded-2xl border bg-gray-100 shadow-md transition-all hover:shadow-lg dark:bg-dark-300"
     >
       <article className="shadow-light100_darknone item-center flex w-[250px] flex-col items-center justify-center p-8">

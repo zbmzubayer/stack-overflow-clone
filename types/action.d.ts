@@ -42,7 +42,7 @@ export interface JobFilterParams {
   query: string;
   page: string;
 }
-export interface GetQuestionsParams {
+export interface GetAllQuestionsParams {
   page?: number;
   pageSize?: number;
   searchQuery?: string;

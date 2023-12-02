@@ -1,11 +1,17 @@
 'use server';
 
+import { FilterQuery } from 'mongoose';
 import Answer from '@/db/models/answer.model';
 import Interaction from '@/db/models/interaction.model';
 import Question, { IQuestion } from '@/db/models/question.model';
 import Tag from '@/db/models/tag.model';
 import User from '@/db/models/user.model';
-import { DeleteQuestionParams, EditQuestionParams, QuestionVoteParams } from '@/types/action';
+import {
+  DeleteQuestionParams,
+  EditQuestionParams,
+  GetAllQuestionsParams,
+  QuestionVoteParams,
+} from '@/types/action';
 import { revalidatePath } from 'next/cache';
 
 export const createQuestion = async (payload: any) => {
@@ -29,9 +35,19 @@ export const createQuestion = async (payload: any) => {
   }
 };
 
-export const getAllQuestions = async ({}) => {
+export const getAllQuestions = async (params: GetAllQuestionsParams) => {
   try {
-    const questions = await Question.find({})
+    const { searchQuery } = params;
+    const query: FilterQuery<typeof Question> = {};
+
+    if (searchQuery) {
+      query.$or = [
+        { title: { $regex: new RegExp(searchQuery, 'i') } },
+        { content: { $regex: new RegExp(searchQuery, 'i') } },
+      ];
+    }
+
+    const questions = await Question.find(query)
       .populate({ path: 'tags', model: Tag })
       .populate({ path: 'author', model: User })
       .sort({ createdAt: -1 });

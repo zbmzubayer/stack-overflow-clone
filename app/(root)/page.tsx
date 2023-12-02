@@ -12,10 +12,11 @@ import { buttonVariants } from '@/components/ui/button';
 import { getAllQuestions } from '@/actions/question.action';
 import { auth } from '@clerk/nextjs';
 
-export default async function Home() {
+export default async function Home({ searchParams }: { searchParams: { q: string } }) {
   // const questions = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const { userId } = auth();
-  const questions = await getAllQuestions({});
+  const questions = await getAllQuestions({ searchQuery: searchParams.q });
+
   return (
     <>
       <div className="flex w-full items-center justify-between">
