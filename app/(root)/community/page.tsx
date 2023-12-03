@@ -22,7 +22,7 @@ export default async function CommunityPage({ searchParams }: { searchParams: { 
         />
         <Filter filters={UserFilters} />
       </div>
-      <section className="mt-12 flex gap-4">
+      <section className="mt-12 grid grid-cols-2 gap-4 lg:grid-cols-3">
         {users.length > 0 ? (
           users.map((user) => <UserCard key={user._id} user={user} />)
         ) : (
