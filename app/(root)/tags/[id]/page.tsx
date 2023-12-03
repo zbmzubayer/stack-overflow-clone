@@ -1,5 +1,5 @@
 import { SearchIcon } from 'lucide-react';
-import { SearchParamsProps } from '@/types/props';
+import { ParamsSearchProps } from '@/types/props';
 import { getQuestionsByTagId } from '@/actions/tag.action';
 import { tagQuestionNoResult } from '@/constants/no-result';
 import LocalSearch from '@/components/local-search';
@@ -7,7 +7,7 @@ import NoResult from '@/components/no-result';
 import QuestionCard from '@/components/cards/question-card';
 import Pagination from '@/components/pagination';
 
-export default async function TagDetailsPage({ params, searchParams }: SearchParamsProps) {
+export default async function TagDetailsPage({ params, searchParams }: ParamsSearchProps) {
   const tag = await getQuestionsByTagId({
     tagId: params.id,
     searchQuery: searchParams.q,

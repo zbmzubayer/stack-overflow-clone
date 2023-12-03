@@ -1,25 +1,22 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { CalendarDaysIcon, LinkIcon, MapPinIcon } from 'lucide-react';
 import { SignedIn, auth } from '@clerk/nextjs';
+import { ParamsSearchProps } from '@/types/props';
 import { getUserInfo } from '@/actions/user.action';
 import getJoinedDate from '@/utils/getJoinedDate';
-import { buttonVariants } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Stats from '@/components/stats';
 import QuestionsTab from '@/components/questions-tab';
-import { cn } from '@/lib/utils';
 import AnswerTabs from '@/components/answers-tab';
-import { Calendar, CalendarDaysIcon, LinkIcon, MapPinIcon } from 'lucide-react';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
-interface Props {
-  params: { id: string };
-  searchParams: { q?: string };
-}
-
-export default async function Profile({ params, searchParams }: Props) {
+export default async function Profile({ params, searchParams }: ParamsSearchProps) {
   const { userId: clerkId } = auth();
-  const userInfo = await getUserInfo(params.id);
+  const userInfo = await getUserInfo(params?.id!);
   const { user, totalQuestions, totalAnswers } = userInfo;
+
   return (
     <>
       <div className="flex justify-between">

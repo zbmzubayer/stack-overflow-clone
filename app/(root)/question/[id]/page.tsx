@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Clock, Eye, MessageCircle } from 'lucide-react';
 import { auth } from '@clerk/nextjs';
-import { SearchParamsProps } from '@/types/props';
+import { ParamsSearchProps } from '@/types/props';
 import { getQuestionById } from '@/actions/question.action';
 import { getUserById } from '@/actions/user.action';
 import getFormatNumber from '@/utils/getFormatNumber';
@@ -13,7 +13,7 @@ import ParseHTML from '@/components/parse-html';
 import Votes from '@/components/votes';
 import { TagBadge } from '@/components/tags-badge';
 
-export default async function QuestionDetailPage({ params, searchParams }: SearchParamsProps) {
+export default async function QuestionDetailPage({ params, searchParams }: ParamsSearchProps) {
   const question = await getQuestionById(params.id);
   const { title, content, views, upvotes, downvotes, createdAt, tags, answers, author } = question;
   const { userId } = auth();
