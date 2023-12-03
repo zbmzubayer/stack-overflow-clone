@@ -12,7 +12,7 @@ import {
 
 export const getAllTags = async (params: GetAllTagsParams) => {
   try {
-    const { searchQuery, filter, page = 1, pageSize = 3 } = params;
+    const { searchQuery, filter, page = 1, pageSize = 20 } = params;
     const query: FilterQuery<typeof Tag> = {};
     if (searchQuery) {
       query.$or = [{ name: { $regex: new RegExp(searchQuery, 'i') } }];
@@ -64,14 +64,18 @@ export const getTopInteractedTags = async (params: GetTopInteractedTagsParams) =
 
 export const getQuestionsByTagId = async (params: GetQuestionsByTagIdParams) => {
   try {
-    const { tagId, page = 1, pageSize = 10, searchQuery } = params;
+    const { tagId, searchQuery, page = 1, pageSize = 10 } = params;
     const tagFilter: FilterQuery<ITag> = { _id: tagId };
+    const skip = (page - 1) * pageSize;
+
     const tag = await Tag.findOne(tagFilter).populate({
       path: 'questions',
       model: Question,
       match: searchQuery ? { title: { $regex: searchQuery, $options: 'i' } } : {},
       options: {
         sort: { createdAt: -1 },
+        skip,
+        limit: pageSize,
       },
       populate: [
         { path: 'tags', model: Tag, select: '_id name' },
@@ -80,7 +84,14 @@ export const getQuestionsByTagId = async (params: GetQuestionsByTagIdParams) => 
     });
     if (!tag) throw new Error('Tag not found');
     const questions = tag.questions;
-    return { tagName: tag.name, questions };
+    // Tags questions without pagination & sorting for checking next page
+    const tag2 = await Tag.findOne(tagFilter).populate({
+      path: 'questions',
+      model: Question,
+      match: searchQuery ? { title: { $regex: searchQuery, $options: 'i' } } : {},
+    });
+    const isNext = tag2.questions.length > skip + questions.length;
+    return { tagName: tag.name, questions, isNext };
   } catch (error) {
     console.log(error);
     throw error;

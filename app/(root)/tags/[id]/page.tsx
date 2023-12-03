@@ -1,18 +1,19 @@
 import { SearchIcon } from 'lucide-react';
-import { tagQuestionNoResult } from '@/constants/no-result';
+import { SearchParamsProps } from '@/types/props';
 import { getQuestionsByTagId } from '@/actions/tag.action';
+import { tagQuestionNoResult } from '@/constants/no-result';
 import LocalSearch from '@/components/local-search';
 import NoResult from '@/components/no-result';
 import QuestionCard from '@/components/cards/question-card';
+import Pagination from '@/components/pagination';
 
-interface Props {
-  params: { id: string };
-  searchParams: { q?: string };
-}
-
-export default async function TagDetailsPage({ params, searchParams }: Props) {
-  const tag = await getQuestionsByTagId({ tagId: params.id, page: 1, searchQuery: searchParams.q });
-  const { tagName, questions } = tag;
+export default async function TagDetailsPage({ params, searchParams }: SearchParamsProps) {
+  const tag = await getQuestionsByTagId({
+    tagId: params.id,
+    searchQuery: searchParams.q,
+    page: Number(searchParams.page) || 1,
+  });
+  const { tagName, questions, isNext } = tag;
 
   return (
     <>
@@ -38,6 +39,7 @@ export default async function TagDetailsPage({ params, searchParams }: Props) {
           />
         )}
       </div>
+      <Pagination pageNumber={Number(searchParams.page) || 1} isNext={isNext} />
     </>
   );
 }
