@@ -1,13 +1,13 @@
 'use server';
 
-import Answer, { IAnswer } from '@/db/models/answer.model';
+import Answer from '@/db/models/answer.model';
 import Interaction from '@/db/models/interaction.model';
 import Question from '@/db/models/question.model';
 import {
   AnswerVoteParams,
   CreateAnswerParams,
   DeleteAnswerParams,
-  GetAnswersParams,
+  GetAllAnswersParams,
 } from '@/types/action';
 import { revalidatePath } from 'next/cache';
 
@@ -27,11 +27,31 @@ export const createAnswer = async (params: CreateAnswerParams) => {
   }
 };
 
-export const getAllAnswers = async (questionId: string) => {
+export const getAllAnswers = async (params: GetAllAnswersParams) => {
   try {
+    const { questionId, sortBy } = params;
+
+    let sortOptions = {};
+    switch (sortBy) {
+      case 'highestUpvotes':
+        sortOptions = { upvotes: -1 };
+        break;
+      case 'lowestUpvotes':
+        sortOptions = { upvotes: 1 };
+        break;
+      case 'recent':
+        sortOptions = { createdAt: -1 };
+        break;
+      case 'old':
+        sortOptions = { createdAt: 1 };
+        break;
+      default:
+        break;
+    }
+
     const answers = await Answer.find({ question: questionId })
-      .populate('author', '_id clerkId name picture')
-      .sort({ createdAt: -1 });
+      .populate('author', '_id clerkId name username picture')
+      .sort(sortOptions);
     return answers;
   } catch (error) {
     console.log(error);

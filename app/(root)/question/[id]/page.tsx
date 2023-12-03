@@ -1,18 +1,19 @@
+import Image from 'next/image';
+import Link from 'next/link';
+import { Clock, Eye, MessageCircle } from 'lucide-react';
+import { auth } from '@clerk/nextjs';
+import { SearchParamsProps } from '@/types/props';
 import { getQuestionById } from '@/actions/question.action';
 import { getUserById } from '@/actions/user.action';
+import getFormatNumber from '@/utils/getFormatNumber';
+import getTimeStamp from '@/utils/getTimeStamp';
 import AllAnswers from '@/components/all-answers';
 import AnswerForm from '@/components/forms/answer-form';
 import ParseHTML from '@/components/parse-html';
-import { TagBadge } from '@/components/tags-badge';
 import Votes from '@/components/votes';
-import getFormatNumber from '@/utils/getFormatNumber';
-import getTimeStamp from '@/utils/getTimeStamp';
-import { auth } from '@clerk/nextjs';
-import { Clock, Eye, MessageCircle, ThumbsUp } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
+import { TagBadge } from '@/components/tags-badge';
 
-export default async function QuestionDetailPage({ params }: { params: { id: string } }) {
+export default async function QuestionDetailPage({ params, searchParams }: SearchParamsProps) {
   const question = await getQuestionById(params.id);
   const { title, content, views, upvotes, downvotes, createdAt, tags, answers, author } = question;
   const { userId } = auth();
@@ -72,6 +73,8 @@ export default async function QuestionDetailPage({ params }: { params: { id: str
         questionId={questionId}
         userId={mongoUserId}
         totalAnswers={question.answers.length}
+        page={searchParams?.page}
+        filter={searchParams?.filter}
       />
       <AnswerForm questionId={questionId} userId={mongoUserId} />
     </>

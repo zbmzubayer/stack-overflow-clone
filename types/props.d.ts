@@ -1,4 +1,7 @@
 export interface SearchParamsProps {
+  params: {
+    id: string;
+  };
   searchParams: {
     q?: string;
     filter?: string;
