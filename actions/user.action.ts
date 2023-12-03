@@ -27,7 +27,7 @@ export const createUser = async (payload: IUser) => {
 
 export const getAllUsers = async (params: GetAllUsersParams) => {
   try {
-    const { searchQuery, filter, page = 1, pageSize = 20 } = params;
+    const { searchQuery, filter, page = 1, pageSize = 1 } = params;
     const query: FilterQuery<typeof User> = {};
     const skip = (page - 1) * pageSize;
 
@@ -123,10 +123,11 @@ export const toggleSaveQuestion = async (params: ToggleSaveQuestionParams) => {
 
 export const getSavedQuestions = async (params: GetSavedQuestionsParams) => {
   try {
-    const { clerkId, searchQuery, filter } = params;
+    const { clerkId, searchQuery, filter, page = 1, pageSize = 1 } = params;
     const query: FilterQuery<typeof Question> = searchQuery
       ? { title: { $regex: new RegExp(searchQuery, 'i') } }
       : {};
+    const skip = (page - 1) * pageSize;
     let sortOptions = {};
     switch (filter) {
       case 'most_recent':
@@ -153,6 +154,8 @@ export const getSavedQuestions = async (params: GetSavedQuestionsParams) => {
       match: query,
       options: {
         sort: sortOptions,
+        skip,
+        limit: pageSize,
       },
       populate: [
         { path: 'tags', model: Tag, select: '_id name' },
@@ -160,8 +163,14 @@ export const getSavedQuestions = async (params: GetSavedQuestionsParams) => {
       ],
     });
     if (!user) throw new Error('User not found');
+    // User's saved questions without pagination & sorting for checking if there is next page
+    const user2 = await User.findOne({ clerkId }).populate({
+      path: 'savedQuestions',
+      match: query,
+    });
+    const isNext = user2.savedQuestions.length > skip + user.savedQuestions.length;
     const savedQuestions = user.savedQuestions;
-    return savedQuestions;
+    return { savedQuestions, isNext };
   } catch (err) {
     console.log('Failed to get saved questions', err);
     throw err;

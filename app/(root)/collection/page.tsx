@@ -8,14 +8,17 @@ import LocalSearch from '@/components/local-search';
 import Filter from '@/components/filter';
 import NoResult from '@/components/no-result';
 import QuestionCard from '@/components/cards/question-card';
+import Pagination from '@/components/pagination';
 
 export default async function CollectionPage({ searchParams }: SearchParamsProps) {
   const { userId } = auth();
-  const savedQuestions = await getSavedQuestions({
+  const result = await getSavedQuestions({
     clerkId: userId!,
     searchQuery: searchParams.q,
     filter: searchParams.filter,
+    page: searchParams.page,
   });
+  const { savedQuestions, isNext } = result;
 
   return (
     <>
@@ -43,7 +46,8 @@ export default async function CollectionPage({ searchParams }: SearchParamsProps
             buttonLink={savedQuestionNoResult.buttonLink}
           />
         )}
-      </div>
+      </div>{' '}
+      <Pagination pageNumber={Number(searchParams.page) || 1} isNext={isNext} />
     </>
   );
 }
