@@ -23,6 +23,8 @@ export default function Pagination({ pageNumber, isNext }: PaginationProps) {
     router.push(newUrl);
   };
 
+  if (!isNext && pageNumber === 1) return null;
+
   return (
     <div className="mt-10 flex items-center justify-center gap-2">
       <Button
