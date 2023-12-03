@@ -1,5 +1,6 @@
 import { SearchIcon } from 'lucide-react';
 import { auth } from '@clerk/nextjs';
+import { SearchParamsProps } from '@/types/props';
 import { QuestionFilters } from '@/constants/filters';
 import { savedQuestionNoResult } from '@/constants/no-result';
 import { getSavedQuestions } from '@/actions/user.action';
@@ -8,9 +9,13 @@ import Filter from '@/components/filter';
 import NoResult from '@/components/no-result';
 import QuestionCard from '@/components/cards/question-card';
 
-export default async function CollectionPage({ searchParams }: { searchParams: { q: string } }) {
+export default async function CollectionPage({ searchParams }: SearchParamsProps) {
   const { userId } = auth();
-  const savedQuestions = await getSavedQuestions({ clerkId: userId!, searchQuery: searchParams.q });
+  const savedQuestions = await getSavedQuestions({
+    clerkId: userId!,
+    searchQuery: searchParams.q,
+    filter: searchParams.filter,
+  });
 
   return (
     <>
