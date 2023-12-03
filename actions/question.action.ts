@@ -37,8 +37,9 @@ export const createQuestion = async (payload: any) => {
 
 export const getAllQuestions = async (params: GetAllQuestionsParams) => {
   try {
-    const { searchQuery, filter } = params;
+    const { searchQuery, filter, page = 1, pageSize = 20 } = params;
     const query: FilterQuery<typeof Question> = {};
+    const skip = (page - 1) * pageSize;
 
     if (searchQuery) {
       query.$or = [
@@ -65,8 +66,13 @@ export const getAllQuestions = async (params: GetAllQuestionsParams) => {
     const questions = await Question.find(query)
       .populate({ path: 'tags', model: Tag })
       .populate({ path: 'author', model: User })
+      .skip(skip)
+      .limit(pageSize)
       .sort(sortOptions);
-    return questions;
+
+    const totalQuestions = await Question.countDocuments(query);
+    const isNext = totalQuestions > skip + questions.length;
+    return { questions, isNext };
   } catch (err) {
     console.log('Failed to get all questions', err);
     throw err;

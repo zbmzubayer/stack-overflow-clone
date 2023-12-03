@@ -12,14 +12,17 @@ import { buttonVariants } from '@/components/ui/button';
 import { getAllQuestions } from '@/actions/question.action';
 import { auth } from '@clerk/nextjs';
 import { SearchParamsProps } from '@/types/props';
+import Pagination from '@/components/pagination';
 
 export default async function Home({ searchParams }: SearchParamsProps) {
   // const questions = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const { userId } = auth();
-  const questions = await getAllQuestions({
+  const result = await getAllQuestions({
     searchQuery: searchParams.q,
     filter: searchParams.filter,
+    page: Number(searchParams.page) || 1,
   });
+  const { questions, isNext } = result;
 
   return (
     <>
@@ -54,6 +57,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
           />
         )}
       </div>
+      <Pagination pageNumber={searchParams?.page ? +searchParams.page : 1} isNext={isNext} />
     </>
   );
 }
