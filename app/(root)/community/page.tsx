@@ -5,9 +5,10 @@ import { UserFilters } from '@/constants/filters';
 import { getAllUsers } from '@/actions/user.action';
 import LocalSearch from '@/components/local-search';
 import UserCard from '@/components/cards/user-card';
+import { SearchParamsProps } from '@/types/props';
 
-export default async function CommunityPage({ searchParams }: { searchParams: { q: string } }) {
-  const users = await getAllUsers({ searchQuery: searchParams.q });
+export default async function CommunityPage({ searchParams }: SearchParamsProps) {
+  const users = await getAllUsers({ searchQuery: searchParams.q, filter: searchParams.filter });
 
   return (
     <>
