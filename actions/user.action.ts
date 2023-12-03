@@ -191,12 +191,16 @@ export const getUserInfo = async (username: string) => {
 export const getUserQuestions = async (params: GetUserStatsParams) => {
   try {
     const { userId, page = 1, pageSize = 10 } = params;
+    const skip = (page - 1) * pageSize;
     const totalQuestions = await Question.countDocuments({ author: userId });
     const userQuestions = await Question.find({ author: userId })
       .sort({ views: -1, upvotes: -1 })
+      .skip(skip)
+      .limit(pageSize)
       .populate('tags', '_id name')
       .populate('author', '_id clerkId name username picture');
-    return { totalQuestions, userQuestions };
+    const isNext = totalQuestions > skip + userQuestions.length;
+    return { totalQuestions, userQuestions, isNext };
   } catch (err) {
     console.log('Failed to get user questions', err);
     throw err;
@@ -206,12 +210,16 @@ export const getUserQuestions = async (params: GetUserStatsParams) => {
 export const getUserAnswers = async (params: GetUserStatsParams) => {
   try {
     const { userId, page = 1, pageSize = 10 } = params;
+    const skip = (page - 1) * pageSize;
     const totalAnswers = await Answer.countDocuments({ author: userId });
     const userAnswers = await Answer.find({ author: userId })
       .sort({ upvotes: -1 })
+      .skip(skip)
+      .limit(pageSize)
       .populate('question', '_id title')
       .populate('author', '_id clerkId name username picture');
-    return { totalAnswers, userAnswers };
+    const isNext = totalAnswers > skip + userAnswers.length;
+    return { totalAnswers, userAnswers, isNext };
   } catch (err) {
     console.log('Failed to get user answers', err);
     throw err;
