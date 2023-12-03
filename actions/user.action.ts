@@ -27,8 +27,9 @@ export const createUser = async (payload: IUser) => {
 
 export const getAllUsers = async (params: GetAllUsersParams) => {
   try {
-    const { page = 1, pageSize = 20, filter, searchQuery } = params;
+    const { searchQuery, filter, page = 1, pageSize = 20 } = params;
     const query: FilterQuery<typeof User> = {};
+    const skip = (page - 1) * pageSize;
 
     if (searchQuery) {
       query.$or = [
@@ -52,8 +53,10 @@ export const getAllUsers = async (params: GetAllUsersParams) => {
         break;
     }
 
-    const users = await User.find(query).sort(sortOptions);
-    return users;
+    const users = await User.find(query).skip(skip).limit(pageSize).sort(sortOptions);
+    const totalUsers = await User.countDocuments(query);
+    const isNext = totalUsers > skip + users.length;
+    return { users, isNext };
   } catch (err) {
     console.log('Failed to get all users', err);
     throw err;

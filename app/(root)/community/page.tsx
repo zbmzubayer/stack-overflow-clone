@@ -6,9 +6,15 @@ import { getAllUsers } from '@/actions/user.action';
 import LocalSearch from '@/components/local-search';
 import UserCard from '@/components/cards/user-card';
 import { SearchParamsProps } from '@/types/props';
+import Pagination from '@/components/pagination';
 
 export default async function CommunityPage({ searchParams }: SearchParamsProps) {
-  const users = await getAllUsers({ searchQuery: searchParams.q, filter: searchParams.filter });
+  const result = await getAllUsers({
+    searchQuery: searchParams.q,
+    filter: searchParams.filter,
+    page: Number(searchParams.page) || 1,
+  });
+  const { users, isNext } = result;
 
   return (
     <>
@@ -35,6 +41,7 @@ export default async function CommunityPage({ searchParams }: SearchParamsProps)
           </div>
         )}
       </section>
+      <Pagination pageNumber={Number(searchParams.page) || 1} isNext={isNext} />
     </>
   );
 }
