@@ -11,11 +11,15 @@ import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
 import { getAllQuestions } from '@/actions/question.action';
 import { auth } from '@clerk/nextjs';
+import { SearchParamsProps } from '@/types/props';
 
-export default async function Home({ searchParams }: { searchParams: { q: string } }) {
+export default async function Home({ searchParams }: SearchParamsProps) {
   // const questions = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const { userId } = auth();
-  const questions = await getAllQuestions({ searchQuery: searchParams.q });
+  const questions = await getAllQuestions({
+    searchQuery: searchParams.q,
+    filter: searchParams.filter,
+  });
 
   return (
     <>
