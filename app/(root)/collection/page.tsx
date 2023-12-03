@@ -16,7 +16,7 @@ export default async function CollectionPage({ searchParams }: SearchParamsProps
     clerkId: userId!,
     searchQuery: searchParams.q,
     filter: searchParams.filter,
-    page: searchParams.page,
+    page: Number(searchParams.page) || 1,
   });
   const { savedQuestions, isNext } = result;
 

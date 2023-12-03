@@ -12,11 +12,12 @@ import {
 
 export const getAllTags = async (params: GetAllTagsParams) => {
   try {
-    const { searchQuery, filter } = params;
+    const { searchQuery, filter, page = 1, pageSize = 3 } = params;
     const query: FilterQuery<typeof Tag> = {};
     if (searchQuery) {
       query.$or = [{ name: { $regex: new RegExp(searchQuery, 'i') } }];
     }
+    const skip = (page - 1) * pageSize;
 
     let sortOptions = {};
     switch (filter) {
@@ -36,8 +37,10 @@ export const getAllTags = async (params: GetAllTagsParams) => {
         break;
     }
 
-    const tags = await Tag.find(query).sort(sortOptions);
-    return tags;
+    const tags = await Tag.find(query).skip(skip).limit(pageSize).sort(sortOptions);
+    const totalTags = await Tag.countDocuments(query);
+    const isNext = totalTags > skip + tags.length;
+    return { tags, isNext };
   } catch (error) {
     console.log(error);
     throw error;

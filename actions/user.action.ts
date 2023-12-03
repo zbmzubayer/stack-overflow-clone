@@ -2,7 +2,6 @@
 
 import { FilterQuery } from 'mongoose';
 import { revalidatePath } from 'next/cache';
-import connectToDb from '@/db';
 import User, { IUser } from '@/db/models/user.model';
 import Question from '@/db/models/question.model';
 import Answer from '@/db/models/answer.model';
@@ -15,7 +14,6 @@ import {
 } from '@/types/action';
 
 export const createUser = async (payload: IUser) => {
-  connectToDb();
   try {
     const user = await User.create(payload);
     return user;
@@ -123,7 +121,7 @@ export const toggleSaveQuestion = async (params: ToggleSaveQuestionParams) => {
 
 export const getSavedQuestions = async (params: GetSavedQuestionsParams) => {
   try {
-    const { clerkId, searchQuery, filter, page = 1, pageSize = 1 } = params;
+    const { clerkId, searchQuery, filter, page = 1, pageSize = 20 } = params;
     const query: FilterQuery<typeof Question> = searchQuery
       ? { title: { $regex: new RegExp(searchQuery, 'i') } }
       : {};

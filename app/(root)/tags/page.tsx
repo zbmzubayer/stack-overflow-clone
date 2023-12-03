@@ -9,9 +9,15 @@ import Filter from '@/components/filter';
 import NoResult from '@/components/no-result';
 import { tagVariants } from '@/components/tags-badge';
 import { cn } from '@/lib/utils';
+import Pagination from '@/components/pagination';
 
 export default async function TagsPage({ searchParams }: SearchParamsProps) {
-  const tags = await getAllTags({ searchQuery: searchParams.q, filter: searchParams.filter });
+  const result = await getAllTags({
+    searchQuery: searchParams.q,
+    filter: searchParams.filter,
+    page: Number(searchParams.page) || 1,
+  });
+  const { tags, isNext } = result;
 
   return (
     <>
@@ -54,6 +60,7 @@ export default async function TagsPage({ searchParams }: SearchParamsProps) {
           />
         )}
       </section>
+      <Pagination pageNumber={Number(searchParams.page) || 1} isNext={isNext} />
     </>
   );
 }
