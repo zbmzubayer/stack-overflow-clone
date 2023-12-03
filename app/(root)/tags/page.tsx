@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { SearchIcon } from 'lucide-react';
-import { UserFilters } from '@/constants/filters';
+import { SearchParamsProps } from '@/types/props';
+import { TagFilters } from '@/constants/filters';
 import { tagNoResult } from '@/constants/no-result';
 import { getAllTags } from '@/actions/tag.action';
 import LocalSearch from '@/components/local-search';
@@ -9,8 +10,8 @@ import NoResult from '@/components/no-result';
 import { tagVariants } from '@/components/tags-badge';
 import { cn } from '@/lib/utils';
 
-export default async function TagsPage({ searchParams }: { searchParams: { q: string } }) {
-  const tags = await getAllTags({ searchQuery: searchParams.q });
+export default async function TagsPage({ searchParams }: SearchParamsProps) {
+  const tags = await getAllTags({ searchQuery: searchParams.q, filter: searchParams.filter });
 
   return (
     <>
@@ -23,7 +24,7 @@ export default async function TagsPage({ searchParams }: { searchParams: { q: st
           placeholder="Search for tags"
           className="flex-1"
         />
-        <Filter filters={UserFilters} />
+        <Filter filters={TagFilters} />
       </div>
       <section className="mt-12 grid gap-4 md:grid-cols-2">
         {tags.length > 0 ? (
