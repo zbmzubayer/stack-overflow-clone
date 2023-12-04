@@ -13,6 +13,7 @@ import { getAllQuestions } from '@/actions/question.action';
 import { auth } from '@clerk/nextjs';
 import { SearchParamsProps } from '@/types/props';
 import Pagination from '@/components/pagination';
+import Loading from './loading';
 
 export default async function Home({ searchParams }: SearchParamsProps) {
   // const questions = [1, 2, 3, 4, 5, 6, 7, 8, 9];

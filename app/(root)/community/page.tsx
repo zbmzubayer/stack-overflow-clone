@@ -7,6 +7,7 @@ import LocalSearch from '@/components/local-search';
 import UserCard from '@/components/cards/user-card';
 import { SearchParamsProps } from '@/types/props';
 import Pagination from '@/components/pagination';
+import Loading from './loading';
 
 export default async function CommunityPage({ searchParams }: SearchParamsProps) {
   const result = await getAllUsers({
