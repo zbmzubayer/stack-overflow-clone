@@ -76,7 +76,11 @@ export default async function QuestionDetailPage({ params, searchParams }: Param
         page={searchParams?.page}
         filter={searchParams?.filter}
       />
-      <AnswerForm questionId={questionId} userId={mongoUserId} />
+      <AnswerForm
+        questionId={questionId}
+        userId={mongoUserId}
+        questionTitleContent={`${question.title}\n${question.content}`}
+      />
     </>
   );
 }

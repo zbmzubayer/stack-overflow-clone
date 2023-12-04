@@ -19,8 +19,15 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function AnswerForm({ questionId, userId }: { questionId: string; userId: string }) {
+interface Props {
+  questionId: string;
+  questionTitleContent: string;
+  userId: string;
+}
+
+export default function AnswerForm({ questionId, userId, questionTitleContent }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmittingAI, setIsSubmittingAI] = useState(false);
   const editorRef = useRef(null);
   const pathname = usePathname();
   const { theme } = useTheme();
@@ -52,13 +59,40 @@ export default function AnswerForm({ questionId, userId }: { questionId: string;
     }
   }
 
+  const generateAIAnswer = async () => {
+    if (!userId) return;
+    setIsSubmittingAI(true);
+    try {
+      const res = await fetch(`${envConfig.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`, {
+        method: 'POST',
+        body: JSON.stringify({ question: questionTitleContent }),
+      });
+      const aiAnswer = await res.json();
+      // convert plain text to html
+      const htmlAnswer = aiAnswer.reply.replace(/\n/g, '<br />');
+      if (editorRef.current) {
+        const editor = editorRef.current as any;
+        editor.setContent(htmlAnswer);
+      }
+      // Toast
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmittingAI(false);
+    }
+  };
+
   return (
     <div className="mt-10">
       <div className="flex items-center justify-between">
         <h4 className="paragraph-semibold text-dark400_light800">Write your answer here</h4>
-        <Button className="btn light-border-2 border text-brand-500" onClick={() => {}}>
-          <Sparkles className="mr-1 h-4 w-4 fill-brand-500" />
-          Generate an AI answer
+        <Button
+          disabled={isSubmittingAI}
+          className="btn light-border-2 border text-brand-500"
+          onClick={generateAIAnswer}
+        >
+          <Sparkles className="mr-1 h-4 w-4 fill-orange-300" />
+          {isSubmittingAI ? 'Generating...' : 'Generate AI Answer'}
         </Button>
       </div>
       <Form {...form}>
