@@ -1,3 +1,4 @@
+import { Toaster } from 'sonner';
 import Header from './_components/header';
 import LeftSidebar from './_components/left-sidebar';
 import RightSidebar from './_components/right-sidebar';
@@ -13,7 +14,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         </main>
         <RightSidebar />
       </div>
-      {/* Toaster */}
+      <Toaster richColors position="top-center" />
     </>
   );
 }

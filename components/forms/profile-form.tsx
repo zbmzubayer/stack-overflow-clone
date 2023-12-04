@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { LinkIcon } from 'lucide-react';
+import { toast } from 'sonner';
 import { updateUser } from '@/actions/user.action';
 import {
   Form,
@@ -17,7 +19,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { LinkIcon } from 'lucide-react';
 
 const formSchema = z.object({
   name: z.string().min(1, { message: 'Required' }).min(3).max(50),
@@ -54,9 +55,11 @@ export default function ProfileForm({ clerkId, user }: Props) {
     setIsSubmitting(true);
     try {
       await updateUser(clerkId, values);
+      toast.success('Profile updated successfully');
       router.back();
     } catch (err) {
       console.log(err);
+      toast.error('Something went wrong');
     } finally {
       setIsSubmitting(false);
     }

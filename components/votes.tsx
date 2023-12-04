@@ -1,5 +1,6 @@
 'use client';
 
+import { toast } from 'sonner';
 import { downvoteAnswer, upvoteAnswer } from '@/actions/answer.action';
 import { viewQuestion } from '@/actions/interaction.action';
 import { downvoteQuestion, upvoteQuestion } from '@/actions/question.action';
@@ -33,14 +34,21 @@ export default function Votes({
   const router = useRouter();
   const pathname = usePathname();
   const handleSave = async () => {
-    if (!userId) return;
+    if (!userId) {
+      return toast.error('You must be logged in to save question');
+    }
     if (type === 'Question') {
       await toggleSaveQuestion({ questionId: itemId, userId, path: pathname });
+      hasSaved
+        ? toast.warning('Question is removed from your collection')
+        : toast.success('Question is added to your collection');
     }
   };
 
   const handleVote = async (voteType: string) => {
-    if (!userId) return;
+    if (!userId) {
+      return toast.error('You must be logged in to vote');
+    }
 
     try {
       if (type === 'Question') {
@@ -52,6 +60,7 @@ export default function Votes({
             hasDownvoted,
             path: pathname,
           });
+          hasUpvoted ? toast('Upvote removed') : toast.success('Upvoted successfully');
         } else {
           await downvoteQuestion({
             questionId: itemId,
@@ -60,6 +69,7 @@ export default function Votes({
             hasDownvoted,
             path: pathname,
           });
+          hasDownvoted ? toast('Downvote removed') : toast('Downvoted successfully');
         }
       } else if (type === 'Answer') {
         if (voteType === 'upvote') {

@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { useTheme } from 'next-themes';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Editor } from '@tinymce/tinymce-react';
+import { toast } from 'sonner';
 import envConfig from '@/config';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
@@ -47,6 +48,7 @@ export default function AnswerForm({ questionId, userId, questionTitleContent }:
         author: userId,
         path: pathname,
       });
+      toast.success('Answer submitted successfully');
       form.reset();
       if (editorRef.current) {
         const editor = editorRef.current as any;
@@ -54,6 +56,7 @@ export default function AnswerForm({ questionId, userId, questionTitleContent }:
       }
     } catch (error) {
       console.log(error);
+      toast.error('Something went wrong');
     } finally {
       setIsSubmitting(false);
     }
@@ -74,9 +77,10 @@ export default function AnswerForm({ questionId, userId, questionTitleContent }:
         const editor = editorRef.current as any;
         editor.setContent(htmlAnswer);
       }
-      // Toast
+      toast.success('AI Answer generated successfully');
     } catch (error) {
       console.log(error);
+      toast.error('Something went wrong');
     } finally {
       setIsSubmittingAI(false);
     }

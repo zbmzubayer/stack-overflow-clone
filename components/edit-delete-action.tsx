@@ -4,6 +4,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { FileEditIcon, TrashIcon } from 'lucide-react';
 import { deleteQuestion } from '@/actions/question.action';
 import { deleteAnswer } from '@/actions/answer.action';
+import { toast } from 'sonner';
 
 interface Props {
   type: 'Question' | 'Answer';
@@ -22,9 +23,11 @@ export default function EditDeleteAction({ type, itemId }: Props) {
     if (type === 'Question') {
       // delete question
       await deleteQuestion({ questionId: itemId, path: pathname });
+      toast.warning('Question deleted successfully');
     } else if (type === 'Answer') {
       // delete answer
       await deleteAnswer({ answerId: itemId, path: pathname });
+      toast.warning('Answer deleted successfully');
     }
   };
 

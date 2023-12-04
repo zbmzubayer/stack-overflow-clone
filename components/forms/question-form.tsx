@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2Icon, XIcon } from 'lucide-react';
+import { toast } from 'sonner';
 import { Editor } from '@tinymce/tinymce-react';
 import envConfig from '@/config';
 import {
@@ -88,6 +89,7 @@ export default function QuestionForm({ userId, type, questionDetails }: Props) {
       if (type === 'Create') {
         const payload = { ...values, author: getMongoUser._id };
         await createQuestion(payload);
+        toast.success('Question posted successfully');
         router.push('/');
       } else if (type === 'Edit') {
         await updateQuestion({
@@ -96,10 +98,12 @@ export default function QuestionForm({ userId, type, questionDetails }: Props) {
           content: values.content,
           path: pathname,
         });
+        toast.success('Question updated successfully');
         router.push(`/question/${parsedQuestionDetails._id}`);
       }
     } catch (err) {
       console.log(err);
+      toast.error('Something went wrong');
     } finally {
       setIsSubmitting(false);
     }
