@@ -3,6 +3,7 @@
 import Answer from '@/db/models/answer.model';
 import Interaction from '@/db/models/interaction.model';
 import Question from '@/db/models/question.model';
+import User from '@/db/models/user.model';
 import {
   AnswerVoteParams,
   CreateAnswerParams,
@@ -16,10 +17,19 @@ export const createAnswer = async (params: CreateAnswerParams) => {
     const { content, question, author, path } = params;
     const answer = await Answer.create({ content, question, author });
     // Add the answer to the question's answers array
-    await Question.findByIdAndUpdate(question, {
+    const answeredQuestion = await Question.findByIdAndUpdate(question, {
       $push: { answers: answer._id },
     });
-    // TODO: add interaction
+    // Create an interaction
+    await Interaction.create({
+      user: author,
+      action: 'answer',
+      question,
+      answer: answer._id,
+      tags: answeredQuestion.tags,
+    });
+    // Increase author's 10 points for creating an answer
+    await User.findByIdAndUpdate(author, { $inc: { reputation: 10 } });
     revalidatePath(path);
   } catch (error) {
     console.log(error);
@@ -77,8 +87,11 @@ export const upvoteAnswer = async (params: AnswerVoteParams) => {
     }
     const answer = await Answer.findByIdAndUpdate(answerId, updateQuery, { new: true });
     if (!answer) throw new Error('Answer not found');
+    // Increment user's reputation by +2/-2 for upvoting/revoking an answer
+    await User.findByIdAndUpdate(userId, { $inc: { reputation: hasUpvoted ? -2 : 2 } });
+    // Increment author's reputation by +10/-10 for receiving/revoking for an answer
+    await User.findByIdAndUpdate(answer.author, { $inc: { reputation: hasUpvoted ? -10 : 10 } });
     revalidatePath(path);
-    // Increment user's reputation by 10 for upvoting a question
     return answer;
   } catch (error) {
     console.log(error);
@@ -99,6 +112,12 @@ export const downvoteAnswer = async (params: AnswerVoteParams) => {
     }
     const answer = await Answer.findByIdAndUpdate(answerId, updateQuery, { new: true });
     if (!answer) throw new Error('Answer not found');
+
+    // Same logic as upvoting
+    await User.findByIdAndUpdate(userId, { $inc: { reputation: hasDownvoted ? -2 : 2 } });
+    await User.findByIdAndUpdate(answer.author, {
+      $inc: { reputation: hasDownvoted ? -10 : 10 },
+    });
     revalidatePath(path);
     // Increment user's reputation by 10 for upvoting a answer
     return answer;

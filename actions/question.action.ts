@@ -28,6 +28,15 @@ export const createQuestion = async (payload: any) => {
       tagDocuments.push(existingTag._id);
     }
     await Question.findByIdAndUpdate(question._id, { $push: { tags: { $each: tagDocuments } } });
+    // Create an interaction for the user's ask question action
+    await Interaction.create({
+      user: payload.author,
+      action: 'ask_question',
+      question: question._id,
+      tags: tagDocuments,
+    });
+    // Increment reputation by 5 points
+    await User.findByIdAndUpdate(payload.author, { $inc: { reputation: 5 } });
     revalidatePath('/');
   } catch (err) {
     console.log('Failed to create question', err);
@@ -113,7 +122,11 @@ export const upvoteQuestion = async (params: QuestionVoteParams) => {
     const question = await Question.findByIdAndUpdate(questionId, updateQuery, { new: true });
     if (!question) throw new Error('Question not found');
     revalidatePath(path);
-    // Increment user's reputation by 10 for upvoting a question
+    // Increment user's reputation by +1/-1 for upvoting/revoking a question
+    await User.findByIdAndUpdate(userId, { $inc: { reputation: hasUpvoted ? -1 : 1 } });
+    // Increments author's reputation by +10/-10 for receiving/removing an upvote for the question
+    await User.findByIdAndUpdate(question.author, { $inc: { reputation: hasUpvoted ? -10 : 10 } });
+
     return question;
   } catch (error) {
     console.log(error);
@@ -134,6 +147,11 @@ export const downvoteQuestion = async (params: QuestionVoteParams) => {
     }
     const question = await Question.findByIdAndUpdate(questionId, updateQuery, { new: true });
     if (!question) throw new Error('Question not found');
+    // Same logic as upvoting
+    await User.findByIdAndUpdate(userId, { $inc: { reputation: hasDownvoted ? -1 : 1 } });
+    await User.findByIdAndUpdate(question.author, {
+      $inc: { reputation: hasDownvoted ? -10 : 10 },
+    });
     revalidatePath(path);
     // Increment user's reputation by 10 for upvoting a question
     return question;
