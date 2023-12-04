@@ -25,7 +25,7 @@ export const createUser = async (payload: IUser) => {
 
 export const getAllUsers = async (params: GetAllUsersParams) => {
   try {
-    const { searchQuery, filter, page = 1, pageSize = 1 } = params;
+    const { searchQuery, filter, page = 1, pageSize = 20 } = params;
     const query: FilterQuery<typeof User> = {};
     const skip = (page - 1) * pageSize;
 
