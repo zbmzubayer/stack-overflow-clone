@@ -12,6 +12,7 @@ import {
   GetUserStatsParams,
   ToggleSaveQuestionParams,
 } from '@/types/action';
+import assignBadge from '@/utils/assignBadge';
 
 export const createUser = async (payload: IUser) => {
   try {
@@ -181,7 +182,29 @@ export const getUserInfo = async (username: string) => {
     if (!user) throw new Error('User not found');
     const totalQuestions = await Question.countDocuments({ author: user._id });
     const totalAnswers = await Answer.countDocuments({ author: user._id });
-    return { user, totalQuestions, totalAnswers };
+    const [questionUpvotes] = await Question.aggregate([
+      { $match: { author: user._id } },
+      { $project: { _id: 0, upvotes: { $size: '$upvotes' } } },
+      { $group: { _id: null, totalUpvotes: { $sum: '$upvotes' } } },
+    ]);
+    const [answerUpvotes] = await Answer.aggregate([
+      { $match: { author: user._id } },
+      { $project: { _id: 0, upvotes: { $size: '$upvotes' } } },
+      { $group: { _id: null, totalUpvotes: { $sum: '$upvotes' } } },
+    ]);
+    const [questionViews] = await Question.aggregate([
+      { $match: { author: user._id } },
+      { $group: { _id: null, totalViews: { $sum: '$views' } } },
+    ]);
+    // get user badges depending on certain criteria
+    const badgeCounts = assignBadge({
+      totalQuestions,
+      totalAnswers,
+      questionUpvotes: questionUpvotes.totalUpvotes,
+      answerUpvotes: answerUpvotes.totalUpvotes,
+      totalViews: questionViews.totalViews,
+    });
+    return { user, totalQuestions, totalAnswers, badgeCounts };
   } catch (err) {
     console.log('Failed to get user info', err);
     throw err;

@@ -1,9 +1,10 @@
 'use server';
 
 import { FilterQuery } from 'mongoose';
+import { revalidatePath } from 'next/cache';
 import Answer from '@/db/models/answer.model';
 import Interaction from '@/db/models/interaction.model';
-import Question, { IQuestion } from '@/db/models/question.model';
+import Question from '@/db/models/question.model';
 import Tag from '@/db/models/tag.model';
 import User from '@/db/models/user.model';
 import {
@@ -12,7 +13,6 @@ import {
   GetAllQuestionsParams,
   QuestionVoteParams,
 } from '@/types/action';
-import { revalidatePath } from 'next/cache';
 
 export const createQuestion = async (payload: any) => {
   const { tags, ...rest } = payload;

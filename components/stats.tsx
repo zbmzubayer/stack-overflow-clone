@@ -1,3 +1,4 @@
+import { BadgeCounts } from '@/utils/assignBadge';
 import getFormatNumber from '@/utils/getFormatNumber';
 import Image from 'next/image';
 
@@ -22,12 +23,20 @@ const StatsCard = ({ imgUrl, value, title }: StatsCardProps) => {
 interface Props {
   totalQuestions: number;
   totalAnswers: number;
+  reputation: number;
+  badges: BadgeCounts;
 }
 
-export default function Stats({ totalQuestions, totalAnswers }: Props) {
+export default function Stats({ totalQuestions, totalAnswers, reputation, badges }: Props) {
   return (
-    <div className="mt-10">
+    <div className="mt-7">
       <h4 className="h3-semibold text-dark200_light900">Stats</h4>
+      <div className="flex items-end gap-2">
+        <p className="mt-1 text-sm font-medium">Reputation</p>
+        <span className="rounded-full bg-orange-100 px-2 py-0.5 text-xs font-semibold text-brand-500">
+          {getFormatNumber(reputation)}
+        </span>
+      </div>
       <div className="mt-5 grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-4">
         <div className="light-border flex items-center justify-evenly gap-4 rounded-md border bg-zinc-100 p-6 shadow-light-300 dark:bg-dark-300 dark:shadow-dark-200">
           <div className="">
@@ -43,9 +52,17 @@ export default function Stats({ totalQuestions, totalAnswers }: Props) {
             <p className="body-medium text-dark400_light700">Answers</p>
           </div>
         </div>
-        <StatsCard imgUrl="/assets/icons/gold-medal.svg" value={0} title="Gold Badges" />
-        <StatsCard imgUrl="/assets/icons/silver-medal.svg" value={0} title="Silver Badges" />
-        <StatsCard imgUrl="/assets/icons/bronze-medal.svg" value={0} title="Bronze Badges" />
+        <StatsCard imgUrl="/assets/icons/gold-medal.svg" value={badges.GOLD} title="Gold Badges" />
+        <StatsCard
+          imgUrl="/assets/icons/silver-medal.svg"
+          value={badges.SILVER}
+          title="Silver Badges"
+        />
+        <StatsCard
+          imgUrl="/assets/icons/bronze-medal.svg"
+          value={badges.BRONZE}
+          title="Bronze Badges"
+        />
       </div>
     </div>
   );
