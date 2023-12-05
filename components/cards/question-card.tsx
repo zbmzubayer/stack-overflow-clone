@@ -32,7 +32,7 @@ export default function QuestionCard({ question, clerkId }: Props) {
           </SignedIn>
         </div>
       </div>
-      <div className="mt-2 flex gap-3">
+      <div className="mt-2 flex flex-wrap gap-3">
         {tags.map((tag: any) => (
           <Link href={`/tags/${tag._id}`} key={tag._id} className={cn(tagVariants({ size: 'sm' }))}>
             {tag.name}

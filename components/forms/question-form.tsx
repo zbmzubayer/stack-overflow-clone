@@ -23,6 +23,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { getUserById } from '@/actions/user.action';
 import { createQuestion, updateQuestion } from '@/actions/question.action';
 import { TagBadge } from '../tags-badge';
+import { useTheme } from 'next-themes';
 
 const formSchema = z.object({
   title: z.string().trim().min(1, { message: 'Required' }).min(5).max(120),
@@ -43,6 +44,7 @@ export default function QuestionForm({ userId, type, questionDetails }: Props) {
   const editorRef = useRef(null);
   const router = useRouter();
   const pathname = usePathname();
+  const { theme } = useTheme();
 
   const parsedQuestionDetails = JSON.parse(questionDetails || '{}');
   const questionTags = parsedQuestionDetails?.tags?.map((tag: any) => tag.name);
@@ -121,7 +123,11 @@ export default function QuestionForm({ userId, type, questionDetails }: Props) {
                 Question Title <span className="text-brand-500">*</span>
               </FormLabel>
               <FormControl>
-                <Input className="paragraph-regular light-border-2" {...field} />
+                <Input
+                  placeholder="What is your question?"
+                  className="paragraph-regular light-border-2 background-light700_dark300 text-dark300_light700"
+                  {...field}
+                />
               </FormControl>
               <FormDescription>
                 Be specific and imagine you&apos;re asking a question to another person
@@ -171,6 +177,8 @@ export default function QuestionForm({ userId, type, questionDetails }: Props) {
                     toolbar:
                       'undo redo | codesample | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist fullscreen',
                     content_style: 'body { font-family:Inter; font-size:14px }',
+                    skin: theme === 'dark' ? 'oxide-dark' : 'oxide',
+                    content_css: theme === 'dark' ? 'dark' : 'light',
                   }}
                 />
               </FormControl>
@@ -195,7 +203,7 @@ export default function QuestionForm({ userId, type, questionDetails }: Props) {
                   <Input
                     placeholder="Add tags..."
                     disabled={type === 'Edit'}
-                    className="paragraph-regular light-border-2 border"
+                    className="paragraph-regular light-border-2 background-light700_dark300 text-dark300_light700 border"
                     onKeyDown={(e) => handleInputKeyDown(e, field)}
                   />
                   {field.value.length > 0 && (

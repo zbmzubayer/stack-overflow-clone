@@ -2,14 +2,14 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { MenuIcon, Route } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { MenuIcon } from 'lucide-react';
 import { SignedOut } from '@clerk/nextjs';
 import Logo from './Logo';
 import { sidebarLinks } from '@/constants/navigation';
 import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 export default function MobileMenu() {
   const pathname = usePathname();
@@ -28,42 +28,49 @@ export default function MobileMenu() {
             {sidebarLinks.map((item) => {
               const isActive = pathname === item.route;
               return (
-                <Link
-                  key={item.route}
-                  href={item.route}
-                  className={`text-dark300_light900 flex items-center gap-3 rounded-md p-4 text-sm opacity-75 ${
-                    isActive && 'primary-gradient opacity-100'
-                  }`}
-                >
-                  <Image
-                    src={item.imgURL}
-                    alt={item.label}
-                    width={20}
-                    height={20}
-                    className={`${isActive || 'invert-colors'}`}
-                  />
-                  <span className={`${isActive ? 'font-bold' : 'font-medium'}`}>{item.label}</span>
-                </Link>
+                <SheetClose asChild key={item.route}>
+                  <Link
+                    href={item.route}
+                    className={`text-dark300_light900 flex items-center gap-3 rounded-md p-4 text-sm opacity-75 ${
+                      isActive && 'primary-gradient opacity-100'
+                    }`}
+                  >
+                    <Image
+                      src={item.imgURL}
+                      alt={item.label}
+                      width={20}
+                      height={20}
+                      className={`${isActive || 'invert-colors'}`}
+                    />
+                    <span className={`${isActive ? 'font-bold' : 'font-medium'}`}>
+                      {item.label}
+                    </span>
+                  </Link>
+                </SheetClose>
               );
             })}
           </div>
           <SignedOut>
             <div className="space-y-3">
-              <Link
-                href="/sign-in"
-                className={cn(
-                  buttonVariants(),
-                  'btn-secondary small-medium w-full text-orange-500',
-                )}
-              >
-                Login
-              </Link>
-              <Link
-                href="/sign-up"
-                className={cn(buttonVariants(), 'btn-tertiary text-dark400_light900 w-full')}
-              >
-                Sign up
-              </Link>
+              <SheetClose asChild>
+                <Link
+                  href="/sign-in"
+                  className={cn(
+                    buttonVariants(),
+                    'btn-secondary small-medium w-full text-orange-500',
+                  )}
+                >
+                  Login
+                </Link>
+              </SheetClose>
+              <SheetClose asChild>
+                <Link
+                  href="/sign-up"
+                  className={cn(buttonVariants(), 'btn-tertiary text-dark400_light900 w-full')}
+                >
+                  Sign up
+                </Link>
+              </SheetClose>
             </div>
           </SignedOut>
         </div>

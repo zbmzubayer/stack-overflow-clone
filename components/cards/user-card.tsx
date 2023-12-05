@@ -8,7 +8,7 @@ export default async function UserCard({ user }: any) {
   return (
     <Link
       href={`/profile/${user.username}`}
-      className="overflow-hidden rounded-2xl border bg-gray-100 shadow-md transition-all hover:shadow-lg dark:bg-dark-300"
+      className="overflow-hidden rounded-2xl border bg-gray-100 shadow transition-all hover:shadow-md dark:bg-dark-300"
     >
       <article className="shadow-light100_darknone item-center flex flex-col items-center justify-center p-8">
         <Image
@@ -16,10 +16,10 @@ export default async function UserCard({ user }: any) {
           alt={user.name}
           width={100}
           height={100}
-          className="rounded-full"
+          className="h-[80px] w-[80px] rounded-full"
         />
         <div className="mt-4 text-center">
-          <h3 className="h3-bold line-clamp-1" title={user.name}>
+          <h3 className="line-clamp-1 text-xl font-bold md:text-2xl" title={user.name}>
             {user.name}
           </h3>
           <p className="mt-2 font-medium text-gray-500 dark:text-gray-400">@{user.username}</p>

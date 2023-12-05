@@ -88,7 +88,7 @@ export default function AnswerForm({ questionId, userId, questionTitleContent }:
 
   return (
     <div className="mt-10">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
         <h4 className="paragraph-semibold text-dark400_light800">Write your answer here</h4>
         <Button
           disabled={isSubmittingAI}

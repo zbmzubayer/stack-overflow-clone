@@ -46,7 +46,7 @@ export default async function QuestionDetailPage({ params, searchParams }: Param
   return (
     <>
       <div>
-        <div className="flex flex-col-reverse justify-between sm:flex-row sm:items-center">
+        <div className="flex flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
           <Link href={`profile/${author.clerkId}`} className="flex items-center gap-1">
             <Image
               src={author.picture}

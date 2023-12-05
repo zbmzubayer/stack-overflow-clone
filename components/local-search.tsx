@@ -58,7 +58,7 @@ export default function LocalSearch({
         id="search"
         placeholder={placeholder}
         value={search}
-        className=" border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+        className="border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
         onChange={(e) => setSearch(e.target.value)}
       />
       {iconPosition === 'right' && (

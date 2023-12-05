@@ -30,21 +30,21 @@ export function ThemeToggle() {
       <DropdownMenuContent align="end">
         <DropdownMenuItem
           onClick={() => setTheme('light')}
-          className={`${theme === 'light' ? 'text-orange-500' : ''}`}
+          className={`${theme === 'light' ? 'text-orange-500 focus:text-orange-500' : ''}`}
         >
           <SunIcon className="mr-2 h-4 w-4" />
           Light
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => setTheme('dark')}
-          className={`${theme === 'dark' ? 'text-orange-500' : ''}`}
+          className={`${theme === 'dark' ? 'text-orange-500 focus:text-orange-500' : ''}`}
         >
           <MoonIcon className="mr-2 h-4 w-4" />
           Dark
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => setTheme('system')}
-          className={`${theme === 'system' ? 'text-orange-500' : ''}`}
+          className={`${theme === 'system' ? 'text-orange-500 focus:text-orange-500' : ''}`}
         >
           <LaptopIcon className="mr-2 h-4 w-4" />
           System

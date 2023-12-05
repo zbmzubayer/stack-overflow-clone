@@ -14,7 +14,7 @@ export default function LeftSidebar() {
   const { user } = useUser();
 
   return (
-    <aside className="background-light900_dark200 light-border sticky left-0 top-20 flex h-[calc(100vh-5rem)] flex-col border-r p-5 shadow-light-300 dark:shadow-none max-sm:hidden lg:w-[250px]">
+    <aside className="background-light900_dark200 light-border sticky left-0 top-20 flex h-[calc(100vh-5rem)] flex-col border-r p-5 shadow dark:shadow-none max-sm:hidden lg:w-[250px]">
       <div className="flex h-screen flex-col justify-between">
         <div className="flex flex-col gap-1">
           {sidebarLinks.map((item) => {
@@ -30,7 +30,7 @@ export default function LeftSidebar() {
               <Link
                 key={item.route}
                 href={item.route}
-                className={`text-dark300_light900 flex items-center gap-3 rounded-md p-4 text-sm ${
+                className={`flex items-center gap-3 rounded-md p-4 text-sm ${
                   isActive && 'primary-gradient'
                 }`}
               >
@@ -41,7 +41,11 @@ export default function LeftSidebar() {
                   height={20}
                   className={`${isActive || 'invert-colors'}`}
                 />
-                <span className={`${isActive ? 'font-bold' : 'font-medium'} max-lg:hidden`}>
+                <span
+                  className={`${
+                    isActive ? 'font-bold text-gray-700' : 'font-medium'
+                  } max-lg:hidden`}
+                >
                   {item.label}
                 </span>
               </Link>

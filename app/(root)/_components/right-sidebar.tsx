@@ -9,7 +9,7 @@ export default async function RightSidebar() {
   const popularTags = await getPopularTags();
 
   return (
-    <aside className="background-light900_dark200 light-border sticky right-0 top-20 flex h-[calc(100vh-5rem)] flex-col justify-between border-l p-5 shadow-light-300 dark:shadow-none max-xl:hidden max-sm:hidden lg:w-[350px]">
+    <aside className="background-light900_dark200 light-border sticky right-0 top-20 flex h-[calc(100vh-5rem)] flex-col justify-between border-l p-5 shadow dark:shadow-none max-xl:hidden max-sm:hidden lg:w-[350px]">
       <div>
         <h3 className="h3-bold">Top Questions</h3>
         <div className="mt-5 space-y-7">

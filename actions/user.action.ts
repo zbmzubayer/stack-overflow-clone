@@ -200,9 +200,9 @@ export const getUserInfo = async (username: string) => {
     const badgeCounts = assignBadge({
       totalQuestions,
       totalAnswers,
-      questionUpvotes: questionUpvotes.totalUpvotes,
-      answerUpvotes: answerUpvotes.totalUpvotes,
-      totalViews: questionViews.totalViews,
+      questionUpvotes: questionUpvotes?.totalUpvotes || 0,
+      answerUpvotes: answerUpvotes?.totalUpvotes || 0,
+      totalViews: questionViews?.totalViews || 0,
     });
     return { user, totalQuestions, totalAnswers, badgeCounts };
   } catch (err) {

@@ -38,7 +38,7 @@ export default function Filter({ filters, containerClass, className }: FilterPro
     <div className={containerClass}>
       <Select onValueChange={handleFilerClick} defaultValue={filterParams || undefined}>
         <SelectTrigger
-          className={`background-light800_dark300 light-border text-dark500_light700 rounded-lg px-5 focus-visible:ring-0 focus-visible:ring-transparent sm:w-[200px] ${className}`}
+          className={`background-light800_dark300 light-border text-dark500_light700 min-w-[150px] rounded-lg px-5 focus-visible:ring-0 focus-visible:ring-transparent sm:w-[200px] ${className}`}
         >
           <SelectValue placeholder="Select a filter" />
         </SelectTrigger>

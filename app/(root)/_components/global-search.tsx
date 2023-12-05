@@ -61,7 +61,7 @@ export default function GlobalSearch() {
 
   return (
     <div className="relative w-full max-w-[600px] max-lg:hidden" ref={searchContainerRef}>
-      <div className="background-light800_darkgradient flex grow items-center rounded-xl px-4">
+      <div className="background-light800_darkgradient flex grow items-center rounded-full border-2 px-4">
         <label htmlFor="search" className="cursor-pointer">
           <SearchIcon className="h-6 w-6 text-light-500" />
         </label>
@@ -70,7 +70,7 @@ export default function GlobalSearch() {
           id="search"
           placeholder="Search for anything..."
           value={search}
-          className="border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+          className="border-none bg-transparent text-base focus-visible:ring-0 focus-visible:ring-offset-0"
           onChange={handleOnChange}
         />
       </div>

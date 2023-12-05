@@ -30,5 +30,5 @@ export default function ParseHTML({ content }: { content: string }) {
   useEffect(() => {
     Prism.highlightAll();
   }, []);
-  return <div>{parse(content)}</div>;
+  return <div className="markdown">{parse(content)}</div>;
 }

@@ -36,7 +36,7 @@ export default async function AllAnswers({
         {answers.map((answer) => (
           <article key={answer._id} className="light-border border-b py-10">
             <div className="mb-5 flex items-center justify-between">
-              <div className="flex w-full flex-col-reverse justify-between gap-2 sm:flex-row sm:items-center">
+              <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
                 <Link href={`/profile/${answer.author.clerkId}`} className="flex gap-2">
                   <Image
                     src={answer.author.picture}
