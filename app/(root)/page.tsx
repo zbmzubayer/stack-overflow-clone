@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import Link from 'next/link';
 import { SearchIcon } from 'lucide-react';
 import Filter from '../../components/filter';
@@ -13,7 +14,12 @@ import { getAllQuestions } from '@/actions/question.action';
 import { auth } from '@clerk/nextjs';
 import { SearchParamsProps } from '@/types/props';
 import Pagination from '@/components/pagination';
-import Loading from './loading';
+
+export const metadata: Metadata = {
+  title: 'Dev Overflow | Home',
+  description:
+    'Dev Overflow is a community of developers, where you can ask questions and receive answers from other members of the community.',
+};
 
 export default async function Home({ searchParams }: SearchParamsProps) {
   // const questions = [1, 2, 3, 4, 5, 6, 7, 8, 9];

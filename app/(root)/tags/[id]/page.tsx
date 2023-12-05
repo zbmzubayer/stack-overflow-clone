@@ -1,11 +1,31 @@
+import { Metadata, ResolvingMetadata } from 'next';
 import { SearchIcon } from 'lucide-react';
-import { ParamsSearchProps } from '@/types/props';
+import { MetaDataProps, ParamsSearchProps } from '@/types/props';
 import { getQuestionsByTagId } from '@/actions/tag.action';
 import { tagQuestionNoResult } from '@/constants/no-result';
 import LocalSearch from '@/components/local-search';
 import NoResult from '@/components/no-result';
 import QuestionCard from '@/components/cards/question-card';
 import Pagination from '@/components/pagination';
+
+export async function generateMetadata(
+  { params }: MetaDataProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  // read route params
+  const id = params.id;
+  // fetch data
+  const tag = await getQuestionsByTagId({ tagId: id });
+  const { tagName } = tag;
+  // optionally access and extend (rather than replace) parent metadata
+  const previousImages = (await parent).openGraph?.images || [];
+  return {
+    title: `Dev Overflow | Tag - ${tagName}`,
+    openGraph: {
+      images: ['/some-specific-page-image.jpg', ...previousImages],
+    },
+  };
+}
 
 export default async function TagDetailsPage({ params, searchParams }: ParamsSearchProps) {
   const tag = await getQuestionsByTagId({

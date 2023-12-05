@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import Link from 'next/link';
 import { SearchIcon } from 'lucide-react';
 import { SearchParamsProps } from '@/types/props';
@@ -10,6 +11,12 @@ import NoResult from '@/components/no-result';
 import { tagVariants } from '@/components/tags-badge';
 import { cn } from '@/lib/utils';
 import Pagination from '@/components/pagination';
+
+export const metadata: Metadata = {
+  title: 'Dev Overflow | Tags',
+  description:
+    'Tags are a means of connecting experts with questions they will be able to answer by sorting questions into specific, well-defined categories.',
+};
 
 export default async function TagsPage({ searchParams }: SearchParamsProps) {
   const result = await getAllTags({

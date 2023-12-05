@@ -12,3 +12,8 @@ export type SearchParamsProps = {
 };
 
 export type ParamsSearchProps = ParamsProps & SearchParamsProps;
+
+export type MetaDataProps = {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};

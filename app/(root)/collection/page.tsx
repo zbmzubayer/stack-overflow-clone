@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import { SearchIcon } from 'lucide-react';
 import { auth } from '@clerk/nextjs';
 import { SearchParamsProps } from '@/types/props';
@@ -9,6 +10,12 @@ import Filter from '@/components/filter';
 import NoResult from '@/components/no-result';
 import QuestionCard from '@/components/cards/question-card';
 import Pagination from '@/components/pagination';
+
+export const metadata: Metadata = {
+  title: 'Dev Overflow | Collections',
+  description:
+    "Your collections of saved questions on Dev Overflow. You can save questions by clicking on the star icon on the question's page",
+};
 
 export default async function CollectionPage({ searchParams }: SearchParamsProps) {
   const { userId } = auth();

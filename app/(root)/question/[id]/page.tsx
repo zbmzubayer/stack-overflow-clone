@@ -1,8 +1,9 @@
+import { Metadata, ResolvingMetadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Clock, Eye, MessageCircle } from 'lucide-react';
 import { auth } from '@clerk/nextjs';
-import { ParamsSearchProps } from '@/types/props';
+import { MetaDataProps, ParamsSearchProps } from '@/types/props';
 import { getQuestionById } from '@/actions/question.action';
 import { getUserById } from '@/actions/user.action';
 import getFormatNumber from '@/utils/getFormatNumber';
@@ -12,6 +13,26 @@ import AnswerForm from '@/components/forms/answer-form';
 import ParseHTML from '@/components/parse-html';
 import Votes from '@/components/votes';
 import { TagBadge } from '@/components/tags-badge';
+
+export async function generateMetadata(
+  { params }: MetaDataProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  // read route params
+  const id = params.id;
+  // fetch data
+  const question = await getQuestionById(id);
+  // optionally access and extend (rather than replace) parent metadata
+  const previousImages = (await parent).openGraph?.images || [];
+
+  return {
+    title: question.title,
+    description: question.content,
+    openGraph: {
+      images: [...previousImages],
+    },
+  };
+}
 
 export default async function QuestionDetailPage({ params, searchParams }: ParamsSearchProps) {
   const question = await getQuestionById(params.id);

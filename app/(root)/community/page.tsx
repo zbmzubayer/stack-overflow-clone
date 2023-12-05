@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import Link from 'next/link';
 import { SearchIcon } from 'lucide-react';
 import Filter from '../../../components/filter';
@@ -7,7 +8,12 @@ import LocalSearch from '@/components/local-search';
 import UserCard from '@/components/cards/user-card';
 import { SearchParamsProps } from '@/types/props';
 import Pagination from '@/components/pagination';
-import Loading from './loading';
+
+export const metadata: Metadata = {
+  title: 'Dev Overflow | Community',
+  description:
+    'Dev Overflow is a community of developers, where you can ask questions and receive answers from other members of the community.',
+};
 
 export default async function CommunityPage({ searchParams }: SearchParamsProps) {
   const result = await getAllUsers({

@@ -1,8 +1,9 @@
+import { Metadata, ResolvingMetadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { CalendarDaysIcon, LinkIcon, MapPinIcon } from 'lucide-react';
 import { SignedIn, auth } from '@clerk/nextjs';
-import { ParamsSearchProps } from '@/types/props';
+import { MetaDataProps, ParamsSearchProps } from '@/types/props';
 import { getUserInfo } from '@/actions/user.action';
 import getJoinedDate from '@/utils/getJoinedDate';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -11,6 +12,29 @@ import QuestionsTab from '@/components/questions-tab';
 import AnswerTabs from '@/components/answers-tab';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+
+export async function generateMetadata(
+  { params }: MetaDataProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  // read route params
+  const id = params.id;
+
+  // fetch data
+  const userInfo = await getUserInfo(id);
+  const { user } = userInfo;
+
+  // optionally access and extend (rather than replace) parent metadata
+  const previousImages = (await parent).openGraph?.images || [];
+
+  return {
+    title: `Dev Overflow | ${user?.username}`,
+    description: user.name,
+    openGraph: {
+      images: [user.picture, ...previousImages],
+    },
+  };
+}
 
 export default async function Profile({ params, searchParams }: ParamsSearchProps) {
   const { userId: clerkId } = auth();
