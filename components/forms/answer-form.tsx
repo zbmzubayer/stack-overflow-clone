@@ -40,6 +40,9 @@ export default function AnswerForm({ questionId, userId, questionTitleContent }:
   });
 
   async function onSubmit(values: FormValues) {
+    if (!userId) {
+      return toast.error('You mussed be logged in to answer question');
+    }
     setIsSubmitting(true);
     try {
       await createAnswer({
@@ -63,7 +66,9 @@ export default function AnswerForm({ questionId, userId, questionTitleContent }:
   }
 
   const generateAIAnswer = async () => {
-    if (!userId) return;
+    if (!userId) {
+      return toast.error('You mussed be logged in to generate AI answer');
+    }
     setIsSubmittingAI(true);
     try {
       const res = await fetch(`${envConfig.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`, {

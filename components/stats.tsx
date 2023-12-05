@@ -1,6 +1,8 @@
 import { BadgeCounts } from '@/utils/assignBadge';
 import getFormatNumber from '@/utils/getFormatNumber';
 import Image from 'next/image';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { HelpCircleIcon } from 'lucide-react';
 
 interface StatsCardProps {
   imgUrl: string;
@@ -20,6 +22,25 @@ const StatsCard = ({ imgUrl, value, title }: StatsCardProps) => {
   );
 };
 
+const ReputationToolTip = () => {
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <HelpCircleIcon className="mb-0.5 h-4 w-4 cursor-pointer" />
+        </TooltipTrigger>
+        <TooltipContent className="px-7 py-3">
+          <ul className="list-disc text-xs font-medium">
+            <li>Get 1 point for upvoting a question</li>
+            <li>Get 10 points for getting upvote to your posted question</li>
+            <li>Lose 10 points for getting downvote to your posted question</li>
+          </ul>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+};
+
 interface Props {
   totalQuestions: number;
   totalAnswers: number;
@@ -31,8 +52,11 @@ export default function Stats({ totalQuestions, totalAnswers, reputation, badges
   return (
     <div className="mt-7">
       <h4 className="h3-semibold text-dark200_light900">Stats</h4>
+
       <div className="flex items-end gap-2">
+        <ReputationToolTip />
         <p className="mt-1 text-sm font-medium">Reputation</p>
+
         <span className="rounded-full bg-orange-100 px-2 py-0.5 text-xs font-semibold text-brand-500">
           {getFormatNumber(reputation)}
         </span>

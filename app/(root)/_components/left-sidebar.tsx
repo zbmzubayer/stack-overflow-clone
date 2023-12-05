@@ -41,11 +41,7 @@ export default function LeftSidebar() {
                   height={20}
                   className={`${isActive || 'invert-colors'}`}
                 />
-                <span
-                  className={`${
-                    isActive ? 'font-bold text-gray-700' : 'font-medium'
-                  } max-lg:hidden`}
-                >
+                <span className={`${isActive ? 'font-bold' : 'font-medium'} max-lg:hidden`}>
                   {item.label}
                 </span>
               </Link>
