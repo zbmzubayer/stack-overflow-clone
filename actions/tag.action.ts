@@ -52,6 +52,11 @@ export const getTopInteractedTags = async (params: GetTopInteractedTagsParams) =
     const { userId, limit = 3 } = params;
     const user = await User.findById(userId);
     if (!user) throw new Error('User not found');
+    const tags = await Tag.aggregate([
+      { $project: { name: 1, numberOfQuestions: { $size: '$questions' } } },
+      { $sort: { numberOfQuestions: -1 } },
+      { $limit: limit },
+    ]);
     return [
       { id: '1', name: 'Tag 1' },
       { id: '2', name: 'Tag 2' },

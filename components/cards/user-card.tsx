@@ -1,7 +1,8 @@
-import { getTopInteractedTags } from '@/actions/tag.action';
-import Image from 'next/image';
 import Link from 'next/link';
+import Image from 'next/image';
+import { getTopInteractedTags } from '@/actions/tag.action';
 import { TagBadge } from '../tags-badge';
+import getFormatNumber from '@/utils/getFormatNumber';
 
 export default async function UserCard({ user }: any) {
   const interactedTags = await getTopInteractedTags({ userId: user._id });
@@ -24,7 +25,7 @@ export default async function UserCard({ user }: any) {
           </h3>
           <p className="mt-2 font-medium text-gray-500 dark:text-gray-400">@{user.username}</p>
           <div className="mt-5">
-            {interactedTags?.length ? (
+            {/* {interactedTags?.length ? (
               <div className="flex items-center gap-2">
                 {interactedTags.map((tag: any) => (
                   <TagBadge key={tag._id} size="sm" className="px-3">
@@ -34,7 +35,10 @@ export default async function UserCard({ user }: any) {
               </div>
             ) : (
               <p className="mt-2 text-gray-500 dark:text-gray-400">No tags yet</p>
-            )}
+            )} */}
+            <span className="rounded-full bg-orange-100 px-5 py-1 text-sm font-medium text-brand-500">
+              Reputation {getFormatNumber(user.reputation)}
+            </span>
           </div>
         </div>
       </article>

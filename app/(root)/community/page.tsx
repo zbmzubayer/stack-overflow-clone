@@ -36,7 +36,7 @@ export default async function CommunityPage({ searchParams }: SearchParamsProps)
         />
         <Filter filters={UserFilters} />
       </div>
-      <section className="mt-12 grid grid-cols-2 gap-4 lg:grid-cols-3 min-[1700px]:grid-cols-4 min-[2200px]:grid-cols-5">
+      <section className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 min-[1700px]:grid-cols-4 min-[2200px]:grid-cols-5">
         {users.length > 0 ? (
           users.map((user) => <UserCard key={user._id} user={user} />)
         ) : (

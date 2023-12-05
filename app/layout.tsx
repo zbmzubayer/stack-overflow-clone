@@ -25,6 +25,7 @@ export const metadata: Metadata = {
   icons: ['/assets/images/logo.png'],
 };
 
+// Connecting to DB
 connectToDb();
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
