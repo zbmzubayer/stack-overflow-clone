@@ -34,7 +34,7 @@ export default function GlobalFilter() {
 
   return (
     <div className="flex items-center gap-5 px-5">
-      <p className="text-sm font-medium">
+      <p className="hidden text-sm font-medium sm:block">
         Type
         <ArrowRight className="ml-2 inline-block h-4 w-4" />
       </p>
@@ -42,7 +42,7 @@ export default function GlobalFilter() {
         {GlobalSearchFilters.map((item) => (
           <button
             key={item.value}
-            className={`small-medium light-border-2 rounded-full px-5 py-2  ${
+            className={`small-medium light-border-2 rounded-full px-4 py-2 sm:px-5 ${
               active === item.value
                 ? 'bg-brand-500 text-light-800 dark:text-light-800 dark:hover:bg-orange-600'
                 : 'bg-light-700 text-dark-400 hover:text-brand-500 dark:bg-dark-500 dark:text-light-500 dark:hover:text-brand-500'

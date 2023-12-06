@@ -3,6 +3,7 @@ import { ThemeToggle } from './theme-toggle';
 import MobileMenu from './MobileMenu';
 import Logo from './Logo';
 import GlobalSearch from './global-search';
+import MobileGlobalSearch from './mobile-global-search';
 
 export default function Header() {
   return (
@@ -10,6 +11,7 @@ export default function Header() {
       <Logo />
       <GlobalSearch />
       <div className="flex-between gap-5">
+        <MobileGlobalSearch />
         <SignedIn>
           <UserButton
             afterSignOutUrl="/"
