@@ -77,6 +77,8 @@ export const getUserById = async (clerkId: string) => {
 export const updateUser = async (clerkId: string, payload: any) => {
   try {
     await connectToDb();
+    const existingUser = await User.findOne({ clerkId });
+    if (!existingUser) throw new Error('User not found');
     const user = await User.findOneAndUpdate({ clerkId }, payload, { new: true });
     revalidatePath(`/profile/${user.username}`);
     return user;

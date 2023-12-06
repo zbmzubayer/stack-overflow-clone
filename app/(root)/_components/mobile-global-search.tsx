@@ -1,26 +1,8 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import {
-  Command,
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-  CommandShortcut,
-} from '@/components/ui/command';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { useEffect, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import GlobalSearchResult from './global-search-result';
-import GlobalSearch from './global-search';
-import { removeKeysUrlParams, setUrlParams } from '@/utils/queryString';
 import Link from 'next/link';
-import GlobalFilter from './gloabl-filter';
-import { ReloadIcon } from '@radix-ui/react-icons';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
   CornerUpLeftIcon,
   FileQuestionIcon,
@@ -28,7 +10,13 @@ import {
   TagIcon,
   UserCircleIcon,
 } from 'lucide-react';
+import { ReloadIcon } from '@radix-ui/react-icons';
 import { globalSearch } from '@/actions/general.action';
+import { removeKeysUrlParams, setUrlParams } from '@/utils/queryString';
+import GlobalFilter from './gloabl-filter';
+import { Button } from '@/components/ui/button';
+import { CommandDialog, CommandInput } from '@/components/ui/command';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function MobileGlobalSearch() {
   const router = useRouter();
@@ -43,6 +31,7 @@ export default function MobileGlobalSearch() {
 
   const global = searchParams.get('global');
   const type = searchParams.get('type');
+
   useEffect(() => {
     setIsOpen(false);
     setSearch('');
