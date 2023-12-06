@@ -13,9 +13,11 @@ import {
   ToggleSaveQuestionParams,
 } from '@/types/action';
 import assignBadge from '@/utils/assignBadge';
+import connectToDb from '@/db';
 
 export const createUser = async (payload: IUser) => {
   try {
+    await connectToDb();
     const user = await User.create(payload);
     return user;
   } catch (err) {
@@ -74,6 +76,7 @@ export const getUserById = async (clerkId: string) => {
 
 export const updateUser = async (clerkId: string, payload: any) => {
   try {
+    await connectToDb();
     const user = await User.findOneAndUpdate({ clerkId }, payload, { new: true });
     revalidatePath(`/profile/${user.username}`);
     return user;
@@ -85,14 +88,14 @@ export const updateUser = async (clerkId: string, payload: any) => {
 
 export const deleteUser = async (clerkId: string) => {
   try {
+    await connectToDb();
     const user = await User.findOneAndDelete({ clerkId });
     if (!user) {
       throw new Error('User not found');
     }
     const userQuestionIds = await Question.find({ author: user._id }).distinct('_id');
     await Question.deleteMany({ author: user._id });
-    // Todo: delete user's answers
-
+    await Answer.deleteMany({ author: user._id });
     return user;
   } catch (err) {
     console.log('Failed to delete user', err);
