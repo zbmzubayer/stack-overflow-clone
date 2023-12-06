@@ -225,8 +225,10 @@ export default function QuestionForm({ userId, type, questionDetails }: Props) {
                 </>
               </FormControl>
               <FormDescription>
-                Add upto 3 tags to describe what your question is about. You need to press enter to
-                add a tag.
+                Type & then press
+                <kbd className="font-semibold text-light-500"> Enter ↵ </kbd>
+                to add a tag. Add upto 3 tags to describe what your question is about. You need to
+                press enter to add a tag.
               </FormDescription>
               <FormMessage className="text-red-500" />
             </FormItem>
