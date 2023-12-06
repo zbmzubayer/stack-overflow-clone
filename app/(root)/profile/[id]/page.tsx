@@ -43,7 +43,7 @@ export default async function Profile({ params, searchParams }: ParamsSearchProp
 
   return (
     <>
-      <div className="flex justify-between">
+      <div className="flex flex-col gap-5 md:flex-row md:justify-between">
         <div>
           <Image
             src={user.picture}
@@ -79,7 +79,6 @@ export default async function Profile({ params, searchParams }: ParamsSearchProp
           </div>
           {user.bio && <p className="paragraph-regular text-dark400_light800 mt-8">{user?.bio}</p>}
         </div>
-
         <div>
           <SignedIn>
             {clerkId === user.clerkId && (
@@ -87,7 +86,7 @@ export default async function Profile({ params, searchParams }: ParamsSearchProp
                 href="/profile/edit"
                 className={cn(
                   buttonVariants({ variant: 'outline' }),
-                  'paragraph-medium text-dark300_light700 border-2 transition-all hover:text-orange-500 sm:w-[200px]',
+                  'paragraph-medium text-dark300_light700 w-[200px] border-2 transition-all hover:text-orange-500',
                 )}
               >
                 Edit profile

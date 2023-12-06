@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { MenuIcon } from 'lucide-react';
-import { SignedOut } from '@clerk/nextjs';
+import { SignedOut, useUser } from '@clerk/nextjs';
 import Logo from './Logo';
 import { sidebarLinks } from '@/constants/navigation';
 import { cn } from '@/lib/utils';
@@ -13,6 +13,7 @@ import { Sheet, SheetClose, SheetContent, SheetTrigger } from '@/components/ui/s
 
 export default function MobileMenu() {
   const pathname = usePathname();
+  const { user } = useUser();
 
   return (
     <Sheet>
@@ -26,7 +27,15 @@ export default function MobileMenu() {
         <div className="flex h-full flex-col justify-between py-10">
           <div className="flex flex-col gap-y-1">
             {sidebarLinks.map((item) => {
-              const isActive = pathname === item.route;
+              const isActive =
+                (pathname.includes(item.route) && item.route.length > 1) || pathname === item.route;
+              if (item.route === '/profile') {
+                if (user?.username) {
+                  item.route = `/profile/${user.username}`;
+                } else {
+                  return null;
+                }
+              }
               return (
                 <SheetClose asChild key={item.route}>
                   <Link

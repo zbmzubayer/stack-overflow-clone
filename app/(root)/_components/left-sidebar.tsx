@@ -18,7 +18,8 @@ export default function LeftSidebar() {
       <div className="flex h-screen flex-col justify-between">
         <div className="flex flex-col gap-1">
           {sidebarLinks.map((item) => {
-            const isActive = pathname === item.route;
+            const isActive =
+              (pathname.includes(item.route) && item.route.length > 1) || pathname === item.route;
             if (item.route === '/profile') {
               if (user?.username) {
                 item.route = `/profile/${user.username}`;
