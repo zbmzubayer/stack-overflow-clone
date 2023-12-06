@@ -39,13 +39,22 @@ export default async function TagsPage({ searchParams }: SearchParamsProps) {
         />
         <Filter filters={TagFilters} />
       </div>
-      <section className="mt-12 grid gap-4 md:grid-cols-2">
+      <section className="mt-12 grid grid-cols-2 gap-4 md:grid-cols-3 2xl:grid-cols-4">
         {tags.length > 0 ? (
           tags.map((tag) => (
-            <Link href={`tags/${tag._id}`} key={tag._id} className="">
-              <article className="bg-gray-100 p-5 dark:bg-dark-200">
+            <Link
+              href={`tags/${tag._id}`}
+              key={tag._id}
+              className="rounded-lg bg-gray-100 dark:bg-dark-200"
+            >
+              <article className="flex w-full flex-col items-center gap-3 p-5">
                 <div>
-                  <p className={cn(tagVariants(), 'background-light700_dark300 font-semibold')}>
+                  <p
+                    className={cn(
+                      tagVariants({ size: 'md' }),
+                      'background-light700_dark300 font-semibold shadow',
+                    )}
+                  >
                     {tag.name}
                   </p>
                 </div>

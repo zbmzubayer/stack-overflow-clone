@@ -12,7 +12,7 @@ export default function GlobalSearch() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const query = searchParams.get('q');
+  const query = searchParams.get('global');
   const [search, setSearch] = useState(query || '');
   const [isOpen, setIsOpen] = useState(false);
 
