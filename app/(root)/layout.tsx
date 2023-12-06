@@ -2,6 +2,7 @@ import { Toaster } from 'sonner';
 import Header from './_components/header';
 import LeftSidebar from './_components/left-sidebar';
 import RightSidebar from './_components/right-sidebar';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -9,9 +10,9 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       <Header />
       <div className="flex">
         <LeftSidebar />
-        <main className="flex min-h-screen flex-1 flex-col px-6 pb-20 pt-5 max-md:pb-14 sm:px-14">
-          {children}
-        </main>
+        <ScrollArea className="h-[calc(100vh-5rem)] flex-1 p-4">
+          <main className="flex flex-col px-6 pb-14 pt-5 sm:px-10">{children}</main>
+        </ScrollArea>
         <RightSidebar />
       </div>
       <Toaster richColors position="top-center" />
