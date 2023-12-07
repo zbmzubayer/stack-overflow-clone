@@ -57,7 +57,7 @@ export default function QuestionCard({ question, clerkId }: Props) {
               - asked {getTimeStamp(createdAt)} ago
             </p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 max-md:justify-end max-sm:justify-between">
             <div className="flex items-center gap-1">
               <ThumbsUp className="h-3.5 w-3.5 stroke-blue-500" />
               {getFormatNumber(upvotes.length)} {upvotes.length > 1 ? 'Votes' : 'Vote'}
